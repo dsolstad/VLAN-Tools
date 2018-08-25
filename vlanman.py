@@ -115,7 +115,6 @@ if __name__ == "__main__":
         print ("[+] Checking for an available IP-address")
         ip_addr = get_ip_addr(interface, vlan, network, netmask)
         if ip_addr != False:
-            print (colored('[+] Found available IP-address: ' + str(ip_addr), 'green'))
             set_ip_addr(interface, vlan, ip_addr, netmask)
             print (colored('[+] Successfully set IP-address: ' + str(ip_addr), 'green'))
         else:
