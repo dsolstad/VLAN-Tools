@@ -1,6 +1,6 @@
 # VLAN-Tools
 
-vlanman.py - A tool to add and remove VLAN interfaces for Linux  
+## vlanman.py - A tool to add and remove VLAN interfaces for Linux  
   
 vlanman.py add <network> <netmask> <vlan nr> <interface> <gateway>  
 vlanman.py rem <interface> <vlan nr> <gateway>  
