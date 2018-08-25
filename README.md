@@ -8,9 +8,8 @@ vlanman.py rem &lt;interface&gt; &lt;vlan nr&gt; &lt;gateway>
 **root@kali:~#** python3 vlanman.py add 192.168.1.0 255.255.255.0 101 eth0 192.168.1.1  
 [+] Adding interface eth0.101 (192.168.1.0)  
 [+] Interface added.  
-[+] Checking for an available IP-address  
-[+] Found available IP-address: 192.168.1.254
-[+] Successfully set IP-address: 192.168.1.254
+[+] Checking for an available IP-address   
+[+] Successfully set IP-address: 192.168.1.254  
 [+] Adding gateway 192.168.1.1  
 [+] Gateway added.  
 [+] Checking if gateway is responding  
