@@ -9,7 +9,8 @@ vlanman.py rem &lt;interface&gt; &lt;vlan nr&gt; &lt;gateway>
 [+] Adding interface eth0.101 (192.168.1.0)  
 [+] Interface added.  
 [+] Checking for an available IP-address  
-[+] Using IP-address: 253  
+[+] Found available IP-address: 192.168.1.254
+[+] Successfully set IP-address: 192.168.1.254
 [+] Adding gateway 192.168.1.1  
 [+] Gateway added.  
 [+] Checking if gateway is responding  
