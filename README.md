@@ -13,3 +13,5 @@ vlanman.py rem &lt;interface&gt; &lt;vlan nr&gt; &lt;gateway>
 [+] Adding gateway 192.168.1.1  
 [+] Gateway added.  
 [+] Checking if gateway is responding  
+[+] Success. Gateway responding.  
+**root@kali:~#**
