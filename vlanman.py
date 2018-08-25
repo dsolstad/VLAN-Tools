@@ -36,12 +36,10 @@ def get_ip_addr(interface, vlan, network, netmask):
     subinterface = interface + "." + vlan
     cmd = ['arp-scan', '--interface=' + interface, network + '/' + str(mask2bits(netmask))]
     res = subprocess.check_output(cmd)
-    # Filter out all valid IP addresses and return the last octets
-    ips = re.findall(b"\d{1,3}\.\d{1,3}\.\d{1,3}\.(\d{1,3})", res)
-    # Convert all the octets from strings to integers
-    ips = list(map(int, ips))
+    # Filter out all valid IP addresses
+    ips = re.findall(b"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}", res)
     # Loop through and return the highest available IP address
-    # DEBUG: print(get_ip_range(network, netmask))
+    # Debug: print(get_ip_range(network, netmask))
     for addr in reversed(get_ip_range(network, netmask)):
         if addr not in ips:
             return addr
@@ -63,7 +61,7 @@ def get_ip_range(network, netmask):
     net = ipaddress.ip_network(network + "/" + netmask)
     ip_range = []
     for addr in list(map(str, net.hosts())):
-        ip_range.append(int(addr.split('.').pop()))
+        ip_range.append(addr)
     return ip_range
 
 # Converts netmask to CIDR. 255.255.255.0 -> /24
@@ -117,10 +115,13 @@ if __name__ == "__main__":
         print ("[+] Checking for an available IP-address")
         ip_addr = get_ip_addr(interface, vlan, network, netmask)
         if ip_addr != False:
-            print (colored('[+] Using IP-address: ' + str(ip_addr), 'green'))
+            print (colored('[+] Found available IP-address: ' + str(ip_addr), 'green'))
+            set_ip_addr(interface, vlan, ip_addr, netmask)
+            print (colored('[+] Successfully set IP-address: ' + str(ip_addr), 'green'))
         else:
             print (colored('[+] Error - Could not find any available IP addresses. Aborting.', 'red'))
             sys.exit()
+        
         print ("[+] Adding gateway " + gateway)
         gateway_add(gateway)
         print (colored('[+] Gateway added.', 'green'))
