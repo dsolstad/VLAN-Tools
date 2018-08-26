@@ -3,9 +3,10 @@
 ## vlanman.py - A tool to add and remove VLAN interfaces on Linux  
   
 vlanman.py add &lt;network&gt; &lt;netmask&gt; &lt;vlan nr&gt; &lt;interface&gt; &lt;gateway&gt;  
-vlanman.py rem &lt;interface&gt; &lt;vlan nr&gt; &lt;gateway>  
+vlanman.py rem &lt;interface&gt; &lt;vlan nr&gt; &lt;gateway&gt;  
 
-**root@kali:~#** python3 vlanman.py add 192.168.1.0 255.255.255.0 101 eth0 192.168.1.1  
+```
+root@kali:~# python3 vlanman.py add 192.168.1.0 255.255.255.0 101 eth0 192.168.1.1  
 [+] Adding interface eth0.101 (192.168.1.0)  
 [+] Interface added.  
 [+] Checking for an available IP-address   
@@ -14,12 +15,14 @@ vlanman.py rem &lt;interface&gt; &lt;vlan nr&gt; &lt;gateway>
 [+] Gateway added.  
 [+] Checking if gateway is responding  
 [+] Success. Gateway responding.  
-**root@kali:~#**  
-  
+root@kali:~#  
+```
   
 ## nmapscan.py - A wrapper around nmap  
-  
-**root@kali:~#** python3 nmapscan.py 192.168.1.0/24 eth0.101  
+
+nmapscan.py &lt;network&gt; &lt;interface&gt;
+```
+root@kali:~# python3 nmapscan.py 192.168.1.0/24 eth0.101  
 [+] Initiating host discovery  
 [+] Found the following hosts:  
 192.168.1.1  
@@ -38,4 +41,5 @@ vlanman.py rem &lt;interface&gt; &lt;vlan nr&gt; &lt;gateway>
 [+] Scanning of 192.168.253.1 completed  
 [+] Initiating port scan on 192.168.1.2
 ...  
-**root@kali:~#**  
+root@kali:~#
+```
