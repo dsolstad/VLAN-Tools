@@ -80,6 +80,10 @@ if __name__ == "__main__":
     vlanman.py rem eth1 101 192.168.1.1
     """    
 
+    if not sys.version_info[0] == 3:
+        print ("You need to run this with Python 3")
+        sys.exit()
+
     if sys.argv[1] == 'rem':
         if len(sys.argv) != 4:
             print (colored('Missing one or more arguments', 'red'))
@@ -90,9 +94,9 @@ if __name__ == "__main__":
         vlan = sys.argv[3]
         gateway = sys.argv[4]
 
-        print ("[+] Removing vlan interface: " + interface + "." + vlan)
+        print ('[+] Removing vlan interface: ' + interface + '.' + vlan)
         vlan_rem(interface, vlan)
-        print ("[+] Removing gateway: " + gateway)
+        print ('[+] Removing gateway: ' + gateway)
         gateway_rem(gateway)
         print (colored('Done.', 'green'))
 
@@ -109,10 +113,10 @@ if __name__ == "__main__":
         gateway = sys.argv[6]
         
         #print ("[+] ")
-        print ("[+] Adding interface " + interface + "." + vlan + " (" + network + ")")
+        print ('[+] Adding interface ' + interface + '.' + vlan + ' (' + network + ')')
         vlan_add(network, netmask, vlan, interface)
         print (colored('[+] Interface added.', 'green'))
-        print ("[+] Checking for an available IP-address")
+        print ('[+] Checking for an available IP-address')
         ip_addr = get_ip_addr(interface, vlan, network, netmask)
         if ip_addr != False:
             set_ip_addr(interface, vlan, ip_addr, netmask)
