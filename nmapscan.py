@@ -13,10 +13,10 @@ import math
 from termcolor import colored
 
 help = """
-vlanscan.py <target network> <src interface>
+nmapscan.py <target network> <src interface>
 
 Example:
-vlanman.py 192.168.1.0/24 eth1.101
+nmapscan.py 192.168.1.0/24 eth1.101
 """
 
 if not sys.version_info[0] == 3:
