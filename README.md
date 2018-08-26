@@ -14,4 +14,28 @@ vlanman.py rem &lt;interface&gt; &lt;vlan nr&gt; &lt;gateway>
 [+] Gateway added.  
 [+] Checking if gateway is responding  
 [+] Success. Gateway responding.  
-**root@kali:~#**
+**root@kali:~#**  
+  
+  
+## nmapscan.py - A wrapper around nmap  
+  
+**root@kali:~#** python3 nmapscan.py 192.168.1.0/24 eth0.101  
+[+] Initiating host discovery  
+[+] Found the following hosts:  
+192.168.1.1  
+192.168.1.2  
+192.168.1.137  
+192.168.1.254  
+[+] Writing result to Results/eth0.101/host_discovery.txt  
+----------------------------------------  
+[+] Initiating port scan on 192.168.1.1  
+[+] Storing result in Results2/eth0.101/192.168.1.1.*  
+[+] Connect scan progress  
+[XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX]  
+[+] Connect scan completed  
+[+] Service scan progress  
+[XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX]  
+[+] Scanning of 192.168.253.1 completed  
+[+] Initiating port scan on 192.168.1.2
+...  
+**root@kali:~#**  
