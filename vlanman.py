@@ -1,4 +1,8 @@
 #!/bin/python
+##
+## This is a tool to quickly add and remove vlan interfaces.
+## Author: Daniel Solstad (dsolstad.com)
+##
 
 import os
 import sys
