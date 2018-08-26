@@ -74,7 +74,7 @@ for host in hosts:
     print ('[+] Initiating port scan on ' + host)
     print ('[+] Storing result in ' + results_dir + '/' + host + '.*')
 
-    cmd = ['nmap', '-sUT', host, '-T4', '-O', '-n', '-v', '-Pn',
+    cmd = ['nmap', '-sUTV', host, '-T4', '-O', '-n', '-v', '-Pn',
            '-pT:1-65535,U:' + top100_udp,
            '--stats-every', '5s',
            '-e', interface,
