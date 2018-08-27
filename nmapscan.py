@@ -1,8 +1,14 @@
-#!/bin/python
+#!/bin/python3
 ##
-## This is nothing else than a wrapper around nmap.
+## A wrapper around nmap
 ## Author: Daniel Solstad (dsolstad.com)
 ##
+
+import sys
+
+if not sys.version_info[0] == 3:
+    print ("You need to run this with Python 3")
+    sys.exit()
 
 import sys
 import os
@@ -13,10 +19,10 @@ import math
 from termcolor import colored
 
 help = """
-nmapscan.py <target network> <src interface>
+vlanscan.py <host or network> <src interface>
 
 Example:
-nmapscan.py 192.168.1.0/24 eth1.101
+vlanman.py 192.168.1.0/24 eth1.101
 """
 
 if not sys.version_info[0] == 3:
@@ -28,7 +34,7 @@ if len(sys.argv) != 3:
     print (help)
     sys.exit()
 
-network = sys.argv[1]
+target = sys.argv[1]
 interface = sys.argv[2]
 
 top100_udp = "7,9,17,19,49,53,67-69,80,88,111,120,123,135-139,158,161-162,177,427,443,"
@@ -39,7 +45,7 @@ top100_udp += "31337,32768-32769,32771,32815,33281,49152-49154,49156,49181-49182
 top100_udp += "49188,49190-49194,49200-49201,65024"
 
 ## Creating the output folder
-results_dir = 'Results2/' + interface
+results_dir = 'Results2/' + target.replace('/', '-')
 if not os.path.exists(results_dir):
     os.makedirs(results_dir)
 
@@ -50,7 +56,7 @@ if not os.path.exists(results_dir):
 ## the result from the port scan in different output files.
 
 print ('[+] Initiating host discovery')
-result = subprocess.check_output(['nmap', '-sn', network, '-e', interface])
+result = subprocess.check_output(['nmap', '-sn', target, '-e', interface])
 # Extract all valid IP addresses
 hosts = re.findall(b'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}', result)
 # Convert the IP addresses to strings from byte-objects
@@ -71,10 +77,10 @@ else:
 print ('----------------------------------------')
 
 for host in hosts:
-    print ('[+] Initiating port scan on ' + host)
+    print ('[+] Scanning ' + host)
     print ('[+] Storing result in ' + results_dir + '/' + host + '.*')
 
-    cmd = ['nmap', '-sUTV', host, '-T4', '-O', '-n', '-v', '-Pn',
+    cmd = ['nmap', '-sUT', host, '-T4', '-O', '-n', '-v', '-Pn',
            '-pT:1-65535,U:' + top100_udp,
            '--stats-every', '5s',
            '-e', interface,
@@ -85,42 +91,39 @@ for host in hosts:
 
     p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
-    print ('[+] Connect scan progress')
     
     host_complete = False
     while host_complete is False:
         #time.sleep(0.5)
         for line in p.stdout:
+            line = line.decode('ascii')
             # Debug - Prints out output from nmap
-            #print (line.rstrip())
-            # Tracking connect scan progress
-            match = re.search(b"Connect Scan Timing: About (.*?)%", line)
-            if match:
-                #print (match.group(1))
-                curr = math.ceil(float(match.group(1).decode('ascii')) / 2) 
-                print ('[' + (colored('X', 'yellow') * curr) + (" " * (50-curr)) + ']', end="\r")
-            if line.find(b'Completed Connect Scan') != -1:
-                print ('[' + (colored('X', 'yellow') * 50) +']', end="\r")
-                print (colored('\n[+] Connect scan completed', 'green'))
-                print ('[+] Service scan progress')
+            print (line.rstrip())
 
-            # Tracking service scan progress
-            match = re.search(b"Service scan Timing: About (.*?)%", line)
+            match = re.search(r'Initiating (.*?) at', line)
+            #print("MATCH",match.group(1))
+            scantype = ''
             if match:
+                scantype = match.group(1)
+                print ('[+] Initiated ' + scantype)
+
+            percent = re.search('About (.*?)%', line)
+            if percent:
                 #print (match.group(1))
-                curr = math.ceil(float(match.group(1).decode('ascii')) / 2) 
+                curr = math.ceil(float(percent.group(1)) / 2) 
                 print ('[' + (colored('X', 'yellow') * curr) + (" " * (50-curr)) + ']', end="\r")
-                if line.find(b'Completed Service scan') != -1:
-                    print ('[' + (colored('X', 'yellow') * 50) +']', end="\r")
-                    print (colored('\n[+] Service scan completed', 'green'))
-                    print ('[+] Finishing up...')
+
+            if line.find('Completed ' + scantype) != -1:
+                print ('[' + (colored('X', 'yellow') * 50) +']', end="\r")
+                print (colored('\n[+] ' + scantype + ' completed', 'green'))
 
             # Checking if the scanning of the host is complete 
-            match = re.search(b"Nmap done: 1 IP address", line)
+            match = re.search('Nmap done: 1 IP address', line)
             if match:
                 print (colored('[+] Scanning of ' + host + ' completed', 'green'))
                 host_complete = True
             else:
                 sys.stdout.flush()
                 break
+
 
