@@ -19,10 +19,10 @@ import math
 from termcolor import colored
 
 help = """
-vlanscan.py <host or network> <src interface>
+nmapscan.py <host, network or range> <src interface>
 
 Example:
-vlanman.py 192.168.1.0/24 eth1.101
+nmapscan.py 192.168.1.0/24 eth1.101
 """
 
 if not sys.version_info[0] == 3:
@@ -30,7 +30,6 @@ if not sys.version_info[0] == 3:
     sys.exit()
 
 if len(sys.argv) != 3:
-    print (colored('Missing one or more arguments', 'red'))
     print (help)
     sys.exit()
 
