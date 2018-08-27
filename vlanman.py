@@ -1,45 +1,51 @@
-#!/bin/python
+#!/bin/python3
 ##
-## This is a tool to quickly add and remove vlan interfaces.
+## This is nothing else than a wrapper around nmap.
 ## Author: Daniel Solstad (dsolstad.com)
 ##
 
-import os
 import sys
+
+if not sys.version_info[0] == 3:
+    print ("You need to run this with python3")
+    sys.exit()
+
+import os
 import time
 import re
-import subprocess
+import subprocess as sub
 import ipaddress
 from termcolor import colored
 
 def vlan_add(network, netmask, vlan, interface):
     subinterface = interface + "." + vlan
-    subprocess.check_output(['ifconfig', interface, 'down'])
-    subprocess.check_output(['ifconfig', subinterface, 'down'])
-    subprocess.check_output(['vconfig', 'rem', subinterface])
-    subprocess.check_output(['vconfig', 'add', interface, vlan])
-    subprocess.check_output(['ifconfig', interface, 'up'])
+    sub.call(['ifconfig', interface, 'down'], stdout=sub.PIPE, stderr=sub.PIPE)
+    sub.call(['ifconfig', subinterface, 'down'], stdout=sub.PIPE, stderr=sub.PIPE)
+    sub.call(['vconfig', 'rem', subinterface], stdout=sub.PIPE, stderr=sub.PIPE)
+    sub.call(['vconfig', 'add', interface, vlan], stdout=sub.PIPE, stderr=sub.PIPE)
+    sub.call(['ifconfig', interface, 'up'], stdout=sub.PIPE, stderr=sub.PIPE)
     
 def vlan_rem(interface, vlan):
     subinterface = interface + "." + vlan
-    subprocess.check_output(['ifconfig', subinterface, 'down'])
-    subprocess.check_output(['vconfig', 'rem', subinterface])
+    sub.call(['ifconfig', subinterface, 'down'], stdout=sub.PIPE, stderr=sub.PIPE)
+    sub.call(['vconfig', 'rem', subinterface], stdout=sub.PIPE, stderr=sub.PIPE)
 
 def set_ip_addr(interface, vlan, ip_addr, netmask):
     subinterface = interface + "." + vlan
-    subprocess.check_output(['ifconfig', subinterface, ip_addr, 'netmask', netmask, 'up'])
+    sub.call(['ifconfig', subinterface, ip_addr, 'netmask', netmask, 'up'], stdout=sub.PIPE, stderr=sub.PIPE)
 
 def gateway_add(gateway):
-    subprocess.check_output(['route', 'add', 'default', 'gw', gateway])
+    sub.check_output(['route', 'add', 'default', 'gw', gateway])
 
 def gateway_rem(gateway):
-    subprocess.check_output(['route', 'del', 'default', 'gw', gateway])
+    sub.check_output(['route', 'del', 'default', 'gw', gateway])
 
 # Checks for an available IP-address. Trying to get the highest available.
 def get_ip_addr(interface, vlan, network, netmask):
     subinterface = interface + "." + vlan
-    cmd = ['arp-scan', '--interface=' + interface, network + '/' + str(mask2bits(netmask))]
-    res = subprocess.check_output(cmd)
+    cmd = ['arp-scan', '--interface=' + subinterface, network + '/' + str(mask2bits(netmask))]
+    p = sub.Popen(cmd, stdout=sub.PIPE, stderr=sub.PIPE)
+    res, err = p.communicate()
     # Filter out all valid IP addresses
     ips = re.findall(b"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}", res)
     # Loop through and return the highest available IP address
@@ -53,7 +59,7 @@ def get_ip_addr(interface, vlan, network, netmask):
 def check_gateway(gateway):
     for i in range(1, 60):
         try:
-            res = subprocess.check_output(['ping', '-c', '1', gateway])
+            res = sub.check_output(['ping', '-c', '1', gateway])
             if res.find('1 received') != -1:
                 return True
         except:
@@ -76,16 +82,16 @@ def mask2bits(netmask):
 if __name__ == "__main__":
 
     help = """
-    vlanman.py add <network> <netmask> <vlan nr> <interface> <gateway>
-    vlanman.py rem <interface> <vlan nr> <gateway>
+    vlancon.py add <network> <netmask> <vlan nr> <interface> <gateway>
+    vlancon.py rem <interface> <vlan nr> <gateway>
 
     Example:
-    vlanman.py add 192.168.1.0 255.255.255.0 101 eth1 192.168.1.1
-    vlanman.py rem eth1 101 192.168.1.1
+    vlancon.py add 192.168.1.0 255.255.255.0 101 eth1 192.168.1.1
+    vlancon.py rem eth1 101 192.168.1.1
     """    
 
-    if not sys.version_info[0] == 3:
-        print ("You need to run this with Python 3")
+    if len(sys.argv) == 1:
+        print (help)
         sys.exit()
 
     if sys.argv[1] == 'rem':
