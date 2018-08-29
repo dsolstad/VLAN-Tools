@@ -1,4 +1,4 @@
-#!/bin/python3
+#!/usr/bin/env python3
 ##
 ## A wrapper around nmap
 ## Author: Daniel Solstad (dsolstad.com)
@@ -19,32 +19,46 @@ import math
 from termcolor import colored
 
 help = """
-nmapscan.py <host, network or range> <src interface>
+nmapscan.py <host, network> <src interface> [<path/to/ports.txt>]
+
+The optional ports.txt needs to be a comma separeted list of tcp ports.
+If not present it will scan all 1 to 65535 ports.
+If you want to change the UDP ports, then edit the source file.
 
 Example:
-nmapscan.py 192.168.1.0/24 eth1.101
+nmapscan.py 192.168.1.0/24 eth1.101 /home/ports.txt
 """
 
 if not sys.version_info[0] == 3:
     print ("You need to run this with Python 3")
     sys.exit()
 
-if len(sys.argv) != 3:
+if len(sys.argv) < 3:
     print (help)
     sys.exit()
 
 target = sys.argv[1]
 interface = sys.argv[2]
 
-top100_udp = "7,9,17,19,49,53,67-69,80,88,111,120,123,135-139,158,161-162,177,427,443,"
-top100_udp += "445,497,500,514-515,518,520,593,623,626,631,996-999,1022-1023,1025-1030,"
-top100_udp += "1433-1434,1645-1646,1701,1718-1719,1812-1813,1900,2000,2048-2049,2222-2223,"
-top100_udp += "3283,3456,3703,4444,4500,5000,5060,5353,5632,9200,10000,17185,20031,30718,"
-top100_udp += "31337,32768-32769,32771,32815,33281,49152-49154,49156,49181-49182,49185-49186,"
-top100_udp += "49188,49190-49194,49200-49201,65024"
+tcp_ports = '1-65535'
+
+try:
+    tcp_ports = open(sys.argv[3], 'r').read()
+except: pass
+
+# UDP top 100 ports
+udp_ports = "7,9,17,19,49,53,67-69,80,88,111,120,123,135-139,158,161-162,177,427,443,"
+udp_ports += "445,497,500,514-515,518,520,593,623,626,631,996-999,1022-1023,1025-1030,"
+udp_ports += "1433-1434,1645-1646,1701,1718-1719,1812-1813,1900,2000,2048-2049,2222-2223,"
+udp_ports += "3283,3456,3703,4444,4500,5000,5060,5353,5632,9200,10000,17185,20031,30718,"
+udp_ports += "31337,32768-32769,32771,32815,33281,49152-49154,49156,49181-49182,49185-49186,"
+udp_ports += "49188,49190-49194,49200-49201,65024"
+
 
 ## Creating the output folder
-results_dir = 'Results2/' + target.replace('/', '-')
+if target.find('/') != -1:
+    results_dir = 'Results/' + target.replace('/', '[') + ']'
+
 if not os.path.exists(results_dir):
     os.makedirs(results_dir)
 
@@ -79,8 +93,8 @@ for host in hosts:
     print ('[+] Scanning ' + host)
     print ('[+] Storing result in ' + results_dir + '/' + host + '.*')
 
-    cmd = ['nmap', '-sUT', host, '-T4', '-O', '-n', '-v', '-Pn',
-           '-pT:1-65535,U:' + top100_udp,
+    cmd = ['nmap', '-sUTV', host, '-T4', '-O', '-n', '-v', '-Pn',
+           '-pT:' + tcp_ports + ',U:' + udp_ports,
            '--stats-every', '5s',
            '-e', interface,
            '-oA', results_dir + '/' + host]
@@ -97,7 +111,7 @@ for host in hosts:
         for line in p.stdout:
             line = line.decode('ascii')
             # Debug - Prints out output from nmap
-            print (line.rstrip())
+            #print (line.rstrip())
 
             match = re.search(r'Initiating (.*?) at', line)
             #print("MATCH",match.group(1))
