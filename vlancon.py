@@ -4,10 +4,6 @@
 ## Author: Daniel Solstad (dsolstad.com)
 ##
 
-
-#sudo ip addr add 192.168.1.2/24 dev eth0;
-#sudo ip route add default via 192.168.1.1 dev eth0;
-#sudo ip link set dev eth0 up/down
 import sys
 
 if not sys.version_info[0] == 3:
