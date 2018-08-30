@@ -19,32 +19,25 @@ import math
 from termcolor import colored
 
 help = """
-nmapscan.py <host, network> <src interface> [<path/to/ports.txt>]
+nmapscan.py <host|network> <src interface> [<path/to/ports.txt>]
 
-The optional ports.txt needs to be a comma separeted list of tcp ports.
-If not present it will scan all 1 to 65535 ports.
-If you want to change the UDP ports, then edit the source file.
+The optional ports file needs to contain TCP ports on line 1 and UDP ports on line 2 (comma separated).
+If no ports file present it will scan all 1 to 65535 tcp and top 100 udp ports
 
 Example:
 nmapscan.py 192.168.1.0/24 eth1.101 /home/ports.txt
-"""
 
-if not sys.version_info[0] == 3:
-    print ("You need to run this with Python 3")
-    sys.exit()
+ports.txt: 
+80,443,445,8080
+67,68,69
+"""
 
 if len(sys.argv) < 3:
     print (help)
-    sys.exit()
+    sys.exit(1)
 
 target = sys.argv[1]
 interface = sys.argv[2]
-
-tcp_ports = '1-65535'
-
-try:
-    tcp_ports = open(sys.argv[3], 'r').read()
-except: pass
 
 # UDP top 100 ports
 udp_ports = "7,9,17,19,49,53,67-69,80,88,111,120,123,135-139,158,161-162,177,427,443,"
@@ -54,6 +47,29 @@ udp_ports += "3283,3456,3703,4444,4500,5000,5060,5353,5632,9200,10000,17185,2003
 udp_ports += "31337,32768-32769,32771,32815,33281,49152-49154,49156,49181-49182,49185-49186,"
 udp_ports += "49188,49190-49194,49200-49201,65024"
 
+tcp_ports = '1-65535'
+
+# If the optional file input parameter is given
+if len(sys.argv) == 4:
+    try:
+        ports_from_file = open(sys.argv[3], 'r').read().replace('\r', '')
+    except:
+        print (colored('[+] Cannot open file for reading. Aborting.', 'red'))
+        sys.exit(1)
+
+    print ('[+] Reading ports from ' + sys.argv[3])
+    match = re.match('(.*?)\n(.*)', ports_from_file)
+
+    if match:
+        tcp_ports = match.group(1)
+        udp_ports = match.group(2)
+    else:
+        print (colored('[+] Wrong format in file. Aborting.', 'red'))
+        sys.exit(1)
+else:
+    print ('[+] No input file with ports given. Using defaults.')
+
+ports = '-pT:' + tcp_ports + ',U:' + udp_ports
 
 ## Creating the output folder
 if target.find('/') != -1:
@@ -61,8 +77,6 @@ if target.find('/') != -1:
 
 if not os.path.exists(results_dir):
     os.makedirs(results_dir)
-
-#ipaddr, submask = target.split('/')
 
 ## Host discovery
 ## We need to do host discovery first to be able to get 
@@ -94,7 +108,7 @@ for host in hosts:
     print ('[+] Storing result in ' + results_dir + '/' + host + '.*')
 
     cmd = ['nmap', '-sUTV', host, '-T4', '-O', '-n', '-v', '-Pn',
-           '-pT:' + tcp_ports + ',U:' + udp_ports,
+           ports,
            '--stats-every', '5s',
            '-e', interface,
            '-oA', results_dir + '/' + host]
@@ -106,16 +120,17 @@ for host in hosts:
 
     
     host_complete = False
+    scantype = ''
     while host_complete is False:
         #time.sleep(0.5)
         for line in p.stdout:
             line = line.decode('ascii')
             # Debug - Prints out output from nmap
-            #print (line.rstrip())
+            print (line.rstrip())
 
             match = re.search(r'Initiating (.*?) at', line)
             #print("MATCH",match.group(1))
-            scantype = ''
+
             if match:
                 scantype = match.group(1)
                 print ('[+] Initiated ' + scantype)
