@@ -37,12 +37,13 @@ def gateway_add(interface, vlan, gateway):
     subinterface = interface + "." + vlan    
     sub.call(['ip', 'route', 'add', 'default', 'via', gateway, 'dev', subinterface], stdout=sub.PIPE, stderr=sub.PIPE)
 
-def gateway_rem(gateway):
+def gateway_rem(interface, vlan, gateway):
+    subinterface = interface + "." + vlan    
     sub.call(['ip', 'route', 'del', 'default', 'via', gateway, 'dev', subinterface], stdout=sub.PIPE, stderr=sub.PIPE)
 
 # Checks for an available IP-address. Trying to get the highest available.
 def get_ip_addr(interface, vlan, network):
-    cmd = ['arp-scan', '--interface=' + subinterface, network]
+    cmd = ['arp-scan', '--interface=' + interface + '.' + vlan , network, '--arpspa', '0.0.0.0']
     #cmd = ['arp', '-a', '-i', interface + "." + vlan]
     p = sub.Popen(cmd, stdout=sub.PIPE, stderr=sub.PIPE)
     res, err = p.communicate()
@@ -51,33 +52,29 @@ def get_ip_addr(interface, vlan, network):
     # Loop through and return the highest available IP address
     # Debug: print(get_ip_range(network, netmask))
     cidr = network.split('/')
-    print (cidr)
     for addr in reversed(get_ip_range(network)):
         if addr not in ips:
             return addr + cidr[1]
     return False
 
-# Kick start the arp table population before checking for an available IP addr.
-# Need to use --send-ip in nmap to send the requests through OS sockets and 
-#  not directly on the network or else the arp table wont be filled up.
+# Wait for vlan to be responsive
 def populate_arp(interface, vlan, network):
     subinterface = interface + '.' + vlan
-    #sub.call(['nmap', '-sn', network, '-e', subinterface, '--send-ip'])
     for i in range(1, 100):
         try:
-            res = sub.check_output(['arp', '-a', '-i', subinterface])
+            res = sub.check_output(['arp', '-a', '-i', subinterface]).decode('ascii')
             # If there no incomplete entries we return
-            if res.find('incomplete') == -1:
+            if res.find('incomplete') == -1 and res.find('no match') == -1:
                 return True
-        except:
-            time.sleep(1)
+        except: pass
+        time.sleep(1)
     return False
 
 # Checking if the gateway is responsive. Waiting 60 seconds.
 def check_gateway(gateway):
     for i in range(1, 60):
         try:
-            res = sub.check_output(['ping', '-c', '1', gateway])
+            res = sub.check_output(['ping', '-c', '1', gateway]).decode('ascii')
             if res.find('1 received') != -1:
                 return True
         except:
@@ -125,7 +122,7 @@ if __name__ == "__main__":
         print ('[+] Removing vlan interface: ' + interface + '.' + vlan)
         vlan_rem(interface, vlan)
         print ('[+] Removing gateway: ' + gateway)
-        gateway_rem(gateway)
+        gateway_rem(interface, vlan, gateway)
         print (colored('Done.', 'green'))
 
     elif sys.argv[1] == 'add':
@@ -158,7 +155,7 @@ if __name__ == "__main__":
             sys.exit()
         
         print ("[+] Adding gateway " + gateway)
-        gateway_add(gateway)
+        gateway_add(interface, vlan, gateway)
         print (colored('[+] Gateway added.', 'green'))
         print ("[+] Checking if gateway is responding")
 
