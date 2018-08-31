@@ -26,7 +26,7 @@ def vlan_add(interface, vlan):
 def vlan_rem(interface, vlan):
     subinterface = interface + "." + vlan
     sub.call(['ip', 'link', 'set', 'dev', interface, 'down'], stdout=sub.PIPE, stderr=sub.PIPE)
-    sub.call(['ip', 'link', 'set', 'dev', subinterface, 'up'], stdout=sub.PIPE, stderr=sub.PIPE)
+    sub.call(['ip', 'link', 'set', 'dev', subinterface, 'down'], stdout=sub.PIPE, stderr=sub.PIPE)
     sub.call(['vconfig', 'rem', subinterface], stdout=sub.PIPE, stderr=sub.PIPE)
 
 def set_ip_addr(interface, vlan, ipaddr):
