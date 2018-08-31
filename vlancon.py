@@ -17,6 +17,15 @@ import subprocess as sub
 import ipaddress
 from termcolor import colored
 
+help = """
+vlancon.py add <network/<cidr>> <interface> <vlan nr> <gateway>
+vlancon.py rem <interface> <vlan nr> <gateway>
+
+Example:
+vlancon.py add 192.168.1.0/24 eth1 101 192.168.1.1
+vlancon.py rem eth1 101 192.168.1.1
+"""
+
 def vlan_add(interface, vlan):
     subinterface = interface + "." + vlan
     sub.call(['vconfig', 'add', interface, vlan], stdout=sub.PIPE, stderr=sub.PIPE)
@@ -93,15 +102,6 @@ def get_ip_range(network):
 
 
 if __name__ == "__main__":
-
-    help = """
-    vlancon.py add <vlan nr> <interface> <network/<cidr>> <gateway>
-    vlancon.py rem <interface> <vlan nr> <gateway>
-
-    Example:
-    vlancon.py add 192.168.1.0/24 eth1 101 192.168.1.1
-    vlancon.py rem eth1 101 192.168.1.1
-    """    
 
     if len(sys.argv) == 1:
         print (help)
