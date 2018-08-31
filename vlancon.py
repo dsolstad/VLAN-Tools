@@ -95,11 +95,11 @@ def get_ip_range(network):
 if __name__ == "__main__":
 
     help = """
-    vlancon.py add <network/<cidr>> <vlan nr> <interface> <gateway>
+    vlancon.py add  <vlan nr> <interface> <network/<cidr>> <gateway>
     vlancon.py rem <interface> <vlan nr> <gateway>
 
     Example:
-    vlancon.py add 192.168.1.0/24 101 eth1 192.168.1.1
+    vlancon.py add 192.168.1.0/24 eth1 101 192.168.1.1
     vlancon.py rem eth1 101 192.168.1.1
     """    
 
@@ -108,7 +108,7 @@ if __name__ == "__main__":
         sys.exit(1)
 
     if sys.argv[1] == 'rem':
-        if len(sys.argv) != 4:
+        if len(sys.argv) != 5:
             print (colored('Missing one or more arguments', 'red'))
             print (help)
             sys.exit(1)
@@ -130,8 +130,8 @@ if __name__ == "__main__":
             sys.exit(1)
 
         network = sys.argv[2]       # e.g 192.168.1.0/24
-        vlan = sys.argv[3]          # e.g 101
-        interface = sys.argv[4]     # e.g eth1
+        interface = sys.argv[3]     # e.g eth1
+        vlan = sys.argv[4]          # e.g 101
         gateway = sys.argv[5]       # e.g 192.168.1.1
         
         #print ("[+] ")
