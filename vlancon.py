@@ -44,25 +44,27 @@ def gateway_rem(interface, vlan, gateway):
 # Checks for an available IP-address. Trying to get the highest available.
 def get_ip_addr(interface, vlan, network):
     cmd = ['arp-scan', '--interface=' + interface + '.' + vlan , network, '--arpspa', '0.0.0.0']
-    #cmd = ['arp', '-a', '-i', interface + "." + vlan]
     p = sub.Popen(cmd, stdout=sub.PIPE, stderr=sub.PIPE)
     res, err = p.communicate()
     # Filter out all valid IP addresses
-    ips = re.findall(b"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}", res)
+    ips = re.findall(r'(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})', res.decode('ascii'))
     # Loop through and return the highest available IP address
     # Debug: print(get_ip_range(network, netmask))
     cidr = network.split('/')
     for addr in reversed(get_ip_range(network)):
         if addr not in ips:
-            return addr + cidr[1]
+            return addr + '/' + cidr[1]
     return False
 
-# Wait for vlan to be responsive
-def populate_arp(interface, vlan, network):
+# Waiting for the network to be ready. 
+# If the ARP table gets populated before 100 seconds, 
+#  we can jump right to the arp scan.
+def wait_for_arp(interface, vlan, network):
     subinterface = interface + '.' + vlan
-    for i in range(1, 100):
+    for i in range(1, 2):
         try:
             res = sub.check_output(['arp', '-a', '-i', subinterface]).decode('ascii')
+            print (res)
             # If there no incomplete entries we return
             if res.find('incomplete') == -1 and res.find('no match') == -1:
                 return True
@@ -89,10 +91,6 @@ def get_ip_range(network):
         ip_range.append(addr)
     return ip_range
 
-# Converts netmask to CIDR. 255.255.255.0 -> /24
-def mask2bits(netmask):
-    return sum([bin(int(x)).count("1") for x in netmask.split(".")])
-
 
 if __name__ == "__main__":
 
@@ -107,13 +105,13 @@ if __name__ == "__main__":
 
     if len(sys.argv) == 1:
         print (help)
-        sys.exit()
+        sys.exit(1)
 
     if sys.argv[1] == 'rem':
         if len(sys.argv) != 4:
             print (colored('Missing one or more arguments', 'red'))
             print (help)
-            sys.exit()
+            sys.exit(1)
 
         interface = sys.argv[2]
         vlan = sys.argv[3]
@@ -129,7 +127,7 @@ if __name__ == "__main__":
         if len(sys.argv) != 6:
             print (colored('Missing one or more arguments', 'red'))
             print (help)
-            sys.exit()
+            sys.exit(1)
 
         network = sys.argv[2]       # e.g 192.168.1.0/24
         vlan = sys.argv[3]          # e.g 101
@@ -143,30 +141,30 @@ if __name__ == "__main__":
         print (colored('[+] Interface added.', 'green'))
         
         print ('[+] Waiting for ARP table to update.')
-        populate_arp(interface, vlan, network)
+        wait_for_arp(interface, vlan, network)
 
         print ('[+] Checking for an available IP-address')
         ipaddr = get_ip_addr(interface, vlan, network)
         if ipaddr != False:
             set_ip_addr(interface, vlan, ipaddr)
-            print (colored('[+] Successfully set IP-address: ' + str(ipaddr), 'green'))
+            print (colored('[+] Using IP-address: ' + str(ipaddr), 'green'))
         else:
             print (colored('[+] Error - Could not find any available IP addresses. Aborting.', 'red'))
-            sys.exit()
+            sys.exit(1)
         
         print ("[+] Adding gateway " + gateway)
         gateway_add(interface, vlan, gateway)
         print (colored('[+] Gateway added.', 'green'))
-        print ("[+] Checking if gateway is responding")
 
+        print ("[+] Checking if gateway is responding")
         if check_gateway(gateway):
             print (colored('[+] Success. Gateway responding.', 'green'))
         else:
             print (colored('[+] Error - No respons from gateway.', 'red'))
-            sys.exit()
+            sys.exit(1)
 
     else:
         print (colored('Missing one or more arguments', 'red'))
         print (help)
-        sys.exit()
+        sys.exit(1)
 
