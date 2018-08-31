@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 ##
-## This is nothing else than a wrapper around nmap.
+## A tool to easily add and remove vlans
 ## Author: Daniel Solstad (dsolstad.com)
 ##
 
@@ -95,7 +95,7 @@ def get_ip_range(network):
 if __name__ == "__main__":
 
     help = """
-    vlancon.py add  <vlan nr> <interface> <network/<cidr>> <gateway>
+    vlancon.py add <vlan nr> <interface> <network/<cidr>> <gateway>
     vlancon.py rem <interface> <vlan nr> <gateway>
 
     Example:
