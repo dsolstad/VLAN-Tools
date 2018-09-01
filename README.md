@@ -29,7 +29,7 @@ root@kali:~# python3 nmapscan.py 192.168.1.0/24 eth0.101
 192.168.1.2  
 192.168.1.137  
 192.168.1.254  
-[+] Writing result to Results/eth0.101/host_discovery.txt  
+[+] Writing result to Results/192.168.1.0[24]/host_discovery.txt  
 ----------------------------------------  
 [+] Initiating port scan on 192.168.1.1  
 [+] Storing result in Results/eth0.101/192.168.1.1.*  
