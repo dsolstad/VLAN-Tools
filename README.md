@@ -2,7 +2,7 @@
 
 ## vlancon.py - A tool to add and remove VLAN interfaces on Linux  
   
-vlancon.py add &lt;network&gt; &lt;netmask&gt; &lt;vlan nr&gt; &lt;interface&gt; &lt;gateway&gt;  
+vlancon.py add &lt;network&gt;/24 &lt;interface&gt; &lt;vlan&gt; &lt;gateway&gt;  
 vlancon.py rem &lt;interface&gt; &lt;vlan nr&gt; &lt;gateway&gt;  
 
 ```
