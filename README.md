@@ -6,7 +6,7 @@ $ vlanloopscan.py &lt;path/to/vlanlist.txt&gt; [&lt;path/to/ports.txt&gt;]
 
 ## vlancon.py - A tool to add and remove VLAN interfaces on Linux  
   
-$ vlancon.py add &lt;network&gt;/24 &lt;interface&gt; &lt;vlan&gt; &lt;gateway&gt;  
+$ vlancon.py add &lt;network&gt; &lt;interface&gt; &lt;vlan&gt; &lt;gateway&gt;  
 $ vlancon.py rem &lt;interface&gt; &lt;vlan nr&gt; &lt;gateway&gt;  
 
 ```
