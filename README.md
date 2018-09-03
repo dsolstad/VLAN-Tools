@@ -1,12 +1,16 @@
 # VLAN-Tools
 
+## vlanloopscan.py - A tool to scan multiple vlans automatically
+
+$ vlanloopscan.py &lt;path/to/vlanlist.txt&gt [&lt;path/to/ports.txt&gt]
+
 ## vlancon.py - A tool to add and remove VLAN interfaces on Linux  
   
-vlancon.py add &lt;network&gt;/24 &lt;interface&gt; &lt;vlan&gt; &lt;gateway&gt;  
-vlancon.py rem &lt;interface&gt; &lt;vlan nr&gt; &lt;gateway&gt;  
+$ vlancon.py add &lt;network&gt;/24 &lt;interface&gt; &lt;vlan&gt; &lt;gateway&gt;  
+$ vlancon.py rem &lt;interface&gt; &lt;vlan nr&gt; &lt;gateway&gt;  
 
 ```
-root@kali:~# python3 vlancon.py add 192.168.1.0 255.255.255.0 101 eth0 192.168.1.1  
+root@kali:~# python3 vlancon.py add 192.168.1.0/24 eth0 101 192.168.1.1  
 [+] Adding interface eth0.101 (192.168.1.0)  
 [+] Interface added.  
 [+] Checking for an available IP-address   
@@ -20,7 +24,7 @@ root@kali:~#
   
 ## nmapscan.py - A wrapper around nmap  
 
-nmapscan.py &lt;network&gt; &lt;interface&gt;
+$ nmapscan.py &lt;network&gt; &lt;interface&gt;
 ```
 root@kali:~# python3 nmapscan.py 192.168.1.0/24 eth0.101  
 [+] Initiating host discovery  
