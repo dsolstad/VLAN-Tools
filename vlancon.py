@@ -70,10 +70,9 @@ def get_ip_addr(interface, vlan, network):
 #  we can jump right to the arp scan.
 def wait_for_arp(interface, vlan, network):
     subinterface = interface + '.' + vlan
-    for i in range(1, 2):
+    for i in range(1, 100):
         try:
             res = sub.check_output(['arp', '-a', '-i', subinterface]).decode('ascii')
-            print (res)
             # If there no incomplete entries we return
             if res.find('incomplete') == -1 and res.find('no match') == -1:
                 return True
