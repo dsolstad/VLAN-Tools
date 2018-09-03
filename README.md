@@ -24,9 +24,10 @@ root@kali:~#
   
 ## nmapscan.py - A wrapper around nmap  
 
-$ nmapscan.py &lt;network&gt; &lt;interface&gt;
+$ nmapscan.py &lt;network&gt; &lt;interface&gt; [&lt;path/to/ports.txt&gt;]
 ```
-root@kali:~# python3 nmapscan.py 192.168.1.0/24 eth0.101  
+root@kali:~# python3 nmapscan.py 192.168.1.0/24 eth0.101
+[+] No input file with ports given. Using defaults.
 [+] Initiating host discovery  
 [+] Found the following hosts:  
 192.168.1.1  
