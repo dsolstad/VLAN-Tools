@@ -2,7 +2,7 @@
 
 ## vlanloopscan.py - A tool to scan multiple vlans automatically
 
-$ vlanloopscan.py &lt;path/to/vlanlist.txt&gt [&lt;path/to/ports.txt&gt]
+$ vlanloopscan.py &lt;path/to/vlanlist.txt&gt; [&lt;path/to/ports.txt&gt]
 
 ## vlancon.py - A tool to add and remove VLAN interfaces on Linux  
   
