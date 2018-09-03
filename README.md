@@ -1,6 +1,6 @@
 # VLAN-Tools
 
-## vlanloopscan.py - A tool to scan multiple vlans automatically
+## vlanloopscan.py - A tool to nmap scan multiple vlans automatically
 
 $ vlanloopscan.py &lt;path/to/vlanlist.txt&gt; [&lt;path/to/ports.txt&gt;]
 
