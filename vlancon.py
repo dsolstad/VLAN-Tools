@@ -18,12 +18,11 @@ import ipaddress
 from termcolor import colored
 
 help = """
-vlancon.py add <network/<cidr>> <interface> <vlan nr>
-vlancon.py rem <interface> <vlan nr>
+vlancon.py add|rem <network/<cidr>> <interface> <vlan nr>
 
 Example:
 vlancon.py add 192.168.1.0/24 eth1 101
-vlancon.py rem eth1 101
+vlancon.py rem 192.168.1.0/24 eth1 101
 """
 
 def vlan_add(interface, vlan):
