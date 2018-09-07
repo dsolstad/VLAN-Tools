@@ -107,20 +107,22 @@ if __name__ == "__main__":
         print (help)
         sys.exit(1)
 
+    network = sys.argv[2]       # e.g 192.168.1.0/24
+    interface = sys.argv[3]     # e.g eth1
+    vlan = sys.argv[4]          # e.g 101
+    #gateway = sys.argv[5]       # e.g 192.168.1.1
+
     if sys.argv[1] == 'rem':
         if len(sys.argv) != 5:
             print (colored('Missing one or more arguments', 'red'))
             print (help)
             sys.exit(1)
 
-        interface = sys.argv[2]
-        vlan = sys.argv[3]
-        #gateway = sys.argv[4]
 
         print ('[+] Removing vlan interface: ' + interface + '.' + vlan)
         vlan_rem(interface, vlan)
-        print ('[+] Removing gateway: ' + gateway)
-        gateway_rem(interface, vlan, gateway)
+        print ('[+] Removing gateway')
+        gateway_rem(network, interface, vlan)
         print (colored('Done.', 'green'))
 
     elif sys.argv[1] == 'add':
@@ -128,11 +130,6 @@ if __name__ == "__main__":
             print (colored('Missing one or more arguments', 'red'))
             print (help)
             sys.exit(1)
-
-        network = sys.argv[2]       # e.g 192.168.1.0/24
-        interface = sys.argv[3]     # e.g eth1
-        vlan = sys.argv[4]          # e.g 101
-        #gateway = sys.argv[5]       # e.g 192.168.1.1
         
         #print ("[+] ")
         print ('[+] Adding interface ' + interface + '.' + vlan + ' (' + network + ')')
