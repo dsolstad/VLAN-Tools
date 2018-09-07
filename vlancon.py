@@ -18,12 +18,12 @@ import ipaddress
 from termcolor import colored
 
 help = """
-vlancon.py add <network/<cidr>> <interface> <vlan nr> <gateway>
+vlancon.py add <network/<cidr>> <interface> <vlan nr>
 vlancon.py rem <interface> <vlan nr> <gateway>
 
 Example:
-vlancon.py add 192.168.1.0/24 eth1 101 192.168.1.1
-vlancon.py rem eth1 101 192.168.1.1
+vlancon.py add 192.168.1.0/24 eth1 101
+vlancon.py rem eth1 101
 """
 
 def vlan_add(interface, vlan):
@@ -42,13 +42,15 @@ def set_ip_addr(interface, vlan, ipaddr):
     subinterface = interface + "." + vlan
     sub.call(['ip', 'addr', 'add', ipaddr, 'dev', subinterface], stdout=sub.PIPE, stderr=sub.PIPE)
 
-def gateway_add(interface, vlan, gateway):
+def gateway_add(network, interface, vlan):
     subinterface = interface + "." + vlan    
-    sub.call(['ip', 'route', 'add', 'default', 'via', gateway, 'dev', subinterface], stdout=sub.PIPE, stderr=sub.PIPE)
+    #sub.call(['ip', 'route', 'add', 'default', 'via', gateway, 'dev', subinterface], stdout=sub.PIPE, stderr=sub.PIPE)
+    sub.call(['ip', 'route', 'add', network, 'dev', subinterface], stdout=sub.PIPE, stderr=sub.PIPE)
 
-def gateway_rem(interface, vlan, gateway):
+def gateway_rem(network, interface, vlan):
     subinterface = interface + "." + vlan    
-    sub.call(['ip', 'route', 'del', 'default', 'via', gateway, 'dev', subinterface], stdout=sub.PIPE, stderr=sub.PIPE)
+    #sub.call(['ip', 'route', 'del', 'default', 'via', gateway, 'dev', subinterface], stdout=sub.PIPE, stderr=sub.PIPE)
+    sub.call(['ip', 'route', 'del', network, 'dev', subinterface], stdout=sub.PIPE, stderr=sub.PIPE)
 
 # Checks for an available IP-address. Trying to get the highest available.
 def get_ip_addr(interface, vlan, network):
@@ -114,7 +116,7 @@ if __name__ == "__main__":
 
         interface = sys.argv[2]
         vlan = sys.argv[3]
-        gateway = sys.argv[4]
+        #gateway = sys.argv[4]
 
         print ('[+] Removing vlan interface: ' + interface + '.' + vlan)
         vlan_rem(interface, vlan)
@@ -123,7 +125,7 @@ if __name__ == "__main__":
         print (colored('Done.', 'green'))
 
     elif sys.argv[1] == 'add':
-        if len(sys.argv) != 6:
+        if len(sys.argv) != 5:
             print (colored('Missing one or more arguments', 'red'))
             print (help)
             sys.exit(1)
@@ -131,7 +133,7 @@ if __name__ == "__main__":
         network = sys.argv[2]       # e.g 192.168.1.0/24
         interface = sys.argv[3]     # e.g eth1
         vlan = sys.argv[4]          # e.g 101
-        gateway = sys.argv[5]       # e.g 192.168.1.1
+        #gateway = sys.argv[5]       # e.g 192.168.1.1
         
         #print ("[+] ")
         print ('[+] Adding interface ' + interface + '.' + vlan + ' (' + network + ')')
@@ -151,16 +153,16 @@ if __name__ == "__main__":
             print (colored('[+] Error - Could not find any available IP addresses. Aborting.', 'red'))
             sys.exit(1)
         
-        print ("[+] Adding gateway " + gateway)
-        gateway_add(interface, vlan, gateway)
+        print ("[+] Adding gateway ")
+        gateway_add(network, interface, vlan)
         print (colored('[+] Gateway added.', 'green'))
 
-        print ("[+] Checking if gateway is responding")
-        if check_gateway(gateway):
-            print (colored('[+] Success. Gateway responding.', 'green'))
-        else:
-            print (colored('[+] Error - No respons from gateway.', 'red'))
-            sys.exit(1)
+        #print ("[+] Checking if gateway is responding")
+        #if check_gateway(gateway):
+        #print (colored('[+] Success. Gateway responding.', 'green'))
+        #else:
+        #    print (colored('[+] Error - No respons from gateway.', 'red'))
+        #    sys.exit(1)
 
     else:
         print (colored('Missing one or more arguments', 'red'))
