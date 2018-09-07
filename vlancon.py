@@ -19,7 +19,7 @@ from termcolor import colored
 
 help = """
 vlancon.py add <network/<cidr>> <interface> <vlan nr>
-vlancon.py rem <interface> <vlan nr> <gateway>
+vlancon.py rem <interface> <vlan nr>
 
 Example:
 vlancon.py add 192.168.1.0/24 eth1 101
