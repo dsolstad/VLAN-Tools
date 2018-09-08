@@ -54,7 +54,6 @@ $ nmapmerge.py &lt;path/to/folder&gt;
 root@kali:~/Desktop# python3 nmapmerge.py Results/192.168.253.0[24]
 [+] Merging files in the folder: Results/192.168.253.0[24]
 [+] Opening: Results/192.168.253.0[24]/192.168.253.254.nmap
-[+] Opening: Results/192.168.253.0[24]/192.168.253.1.nmap
 [+] Opening: Results/192.168.253.0[24]/192.168.253.2.nmap
 [+] Written merged CSV result to /root/Desktop/services.csv
 root@kali:~/Desktop# cat services.csv 
