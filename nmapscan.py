@@ -19,13 +19,16 @@ import math
 from termcolor import colored
 
 help = """
-nmapscan.py <host|network> <src interface> [<path/to/ports.txt>]
+nmapscan.py <target> <src interface> [<path/to/ports.txt>]
+
+The <target> parameter can be a single host, range or a network with appending netmask (CIDR)
 
 The optional ports file needs to contain TCP ports on line 1 and UDP ports on line 2 (comma separated).
-If no ports file present it will scan all 1 to 65535 tcp and top 100 udp ports
+If no ports file is present it will scan all 1 to 65535 tcp and top 100 udp ports.
 
 Example:
 nmapscan.py 192.168.1.0/24 eth1.101 /home/ports.txt
+nmapscan.py 192.168.1.1-5 eth1.101 /home/ports.txt
 
 ports.txt: 
 80,443,445,8080
