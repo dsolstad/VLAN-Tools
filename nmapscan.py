@@ -73,7 +73,7 @@ ports = '-pT:' + tcp_ports + ',U:' + udp_ports
 
 ## Creating the output folder
 if target.find('/') != -1:
-    results_dir = 'Results/' + target.replace('/', '[') + ']'
+    results_dir = 'Results/' + target.replace('/', '[') + ']/'
 else:
     results_dir = 'Results/'
 
@@ -107,13 +107,13 @@ print ('----------------------------------------')
 
 for host in hosts:
     print ('[+] Scanning ' + host)
-    print ('[+] Storing result in ' + results_dir + '/' + host + '.*')
+    print ('[+] Storing result in ' + results_dir + '/' + host + '/*.*')
 
     cmd = ['nmap', '-sUTV', host, '-T4', '-O', '-n', '-v', '-Pn',
            ports,
            '--stats-every', '5s',
            '-e', interface,
-           '-oA', results_dir + '/' + host]
+           '-oA', results_dir + '/' + host + '/' + host]
 
     #Debug - Prints out the full nmap command
     #print (" ".join(cmd))
@@ -128,7 +128,7 @@ for host in hosts:
         for line in p.stdout:
             line = line.decode('ascii')
             # Debug - Prints out output from nmap
-            print (line.rstrip())
+            # print (line.rstrip())
 
             match = re.search(r'Initiating (.*?) at', line)
             #print("MATCH",match.group(1))
