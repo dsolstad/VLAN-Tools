@@ -74,6 +74,8 @@ ports = '-pT:' + tcp_ports + ',U:' + udp_ports
 ## Creating the output folder
 if target.find('/') != -1:
     results_dir = 'Results/' + target.replace('/', '[') + ']'
+else:
+    results_dir = 'Results/' + target
 
 if not os.path.exists(results_dir):
     os.makedirs(results_dir)
