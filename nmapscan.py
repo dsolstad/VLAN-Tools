@@ -75,7 +75,7 @@ ports = '-pT:' + tcp_ports + ',U:' + udp_ports
 if target.find('/') != -1:
     results_dir = 'Results/' + target.replace('/', '[') + ']'
 else:
-    results_dir = 'Results/' + target
+    results_dir = 'Results/'
 
 if not os.path.exists(results_dir):
     os.makedirs(results_dir)
