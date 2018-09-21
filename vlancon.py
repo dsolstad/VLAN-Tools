@@ -25,6 +25,13 @@ vlancon.py add 192.168.1.0/24 eth1 101
 vlancon.py rem 192.168.1.0/24 eth1 101
 """
 
+def check_interface(interface):
+    p = sub.Popen(['ip', 'link', 'show', interface], stdout=sub.PIPE, stderr=sub.PIPE)
+    res, err = p.communicate()
+    if err.decode('ascii').find('does not exist') == -1:
+        return True
+    return False
+        
 def vlan_add(interface, vlan):
     subinterface = interface + "." + vlan
     sub.call(['vconfig', 'add', interface, vlan], stdout=sub.PIPE, stderr=sub.PIPE)
@@ -130,8 +137,11 @@ if __name__ == "__main__":
             print (colored('Missing one or more arguments', 'red'))
             print (help)
             sys.exit(1)
-        
-        #print ("[+] ")
+
+        if not check_interface(interface):
+            print (colored('[+] Interface ' + interface + ' does not exist', 'red'))
+            sys.exit()
+
         print ('[+] Adding interface ' + interface + '.' + vlan + ' (' + network + ')')
         vlan_rem(interface, vlan)
         vlan_add(interface, vlan)
@@ -164,4 +174,3 @@ if __name__ == "__main__":
         print (colored('Missing one or more arguments', 'red'))
         print (help)
         sys.exit(1)
-
