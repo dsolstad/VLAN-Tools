@@ -18,10 +18,11 @@ import ipaddress
 from termcolor import colored
 
 help = """
-vlancon.py add|rem <network/<cidr>> <interface> <vlan nr>
+vlancon.py add|rem <network/<cidr>> <interface> <vlan nr> [<preferred IP-addr>]
 
 Example:
 vlancon.py add 192.168.1.0/24 eth1 101
+vlancon.py add 192.168.1.0/24 eth1 101 192.168.1.50
 vlancon.py rem 192.168.1.0/24 eth1 101
 """
 
@@ -59,7 +60,7 @@ def gateway_rem(network, interface, vlan):
     sub.call(['ip', 'route', 'del', network, 'dev', subinterface], stdout=sub.PIPE, stderr=sub.PIPE)
 
 # Checks for an available IP-address. Trying to get the highest available.
-def get_ip_addr(interface, vlan, network):
+def get_avail_ip_addr(interface, vlan, network):
     cmd = ['arp-scan', '--interface=' + interface + '.' + vlan , network, '--arpspa', '0.0.0.0']
     p = sub.Popen(cmd, stdout=sub.PIPE, stderr=sub.PIPE)
     res, err = p.communicate()
@@ -71,6 +72,21 @@ def get_ip_addr(interface, vlan, network):
     for addr in reversed(get_ip_range(network)):
         if addr not in ips:
             return addr + '/' + cidr[1]
+    return False
+
+# Checks if the wanted IP-address is available. 
+# Returns the IP-address with subnet if available.
+def check_ip(interface, vlan, network, ipaddr):
+    cmd = ['arp-scan', '--interface=' + interface + '.' + vlan , network, '--arpspa', '0.0.0.0']
+    p = sub.Popen(cmd, stdout=sub.PIPE, stderr=sub.PIPE)
+    res, err = p.communicate()
+    # Filter out all valid IP addresses
+    ips = re.findall(r'(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})', res.decode('ascii'))
+    # Loop through and return the highest available IP address
+    # Debug: print(get_ip_range(network, netmask))
+    cidr = network.split('/')
+    if ipaddr not in ips:
+        return ipaddr + '/' + cidr[1]
     return False
 
 # Waiting for the network to be ready. 
@@ -117,11 +133,11 @@ if __name__ == "__main__":
     network = sys.argv[2]       # e.g 192.168.1.0/24
     interface = sys.argv[3]     # e.g eth1
     vlan = sys.argv[4]          # e.g 101
-    #gateway = sys.argv[5]       # e.g 192.168.1.1
+    #gateway = sys.argv[5]      # e.g 192.168.1.1
 
     if sys.argv[1] == 'rem':
         if len(sys.argv) != 5:
-            print (colored('Missing one or more arguments', 'red'))
+            print (colored('Expecting 4 arguments', 'red'))
             print (help)
             sys.exit(1)
 
@@ -133,7 +149,7 @@ if __name__ == "__main__":
         print (colored('Done.', 'green'))
 
     elif sys.argv[1] == 'add':
-        if len(sys.argv) != 5:
+        if len(sys.argv) < 5:
             print (colored('Missing one or more arguments', 'red'))
             print (help)
             sys.exit(1)
@@ -150,8 +166,15 @@ if __name__ == "__main__":
         print ('[+] Waiting for ARP table to update.')
         wait_for_arp(interface, vlan, network)
 
-        print ('[+] Checking for an available IP-address')
-        ipaddr = get_ip_addr(interface, vlan, network)
+        # If the user wants to set preferred IP-address
+        if len(sys.argv) == 6:
+            print ('[+] Checking if the preferred IP-address is available')
+            pref_ip = sys.argv[5]
+            ipaddr = check_ip(interface, vlan, network, pref_ip)
+        else:
+            print ('[+] Checking for an available IP-address')
+            ipaddr = get_avail_ip_addr(interface, vlan, network)
+
         if ipaddr != False:
             set_ip_addr(interface, vlan, ipaddr)
             print (colored('[+] Using IP-address: ' + str(ipaddr), 'green'))
