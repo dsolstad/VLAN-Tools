@@ -110,7 +110,7 @@ print ('----------------------------------------')
 
 for host in hosts:
     print ('[+] Scanning ' + host)
-    print ('[+] Storing result in ' + results_dir + '/' + host + '/*.*')
+    print ('[+] Storing result in ' + results_dir + host + '/*.*')
 
     cmd = ['nmap', '-sUTV', host, '-T4', '-O', '-n', '-v', '-Pn', '--reason',
            ports,
