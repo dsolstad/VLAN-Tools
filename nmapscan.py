@@ -116,7 +116,7 @@ for host in hosts:
            ports,
            '--stats-every', '5s',
            '-e', interface,
-           '-oA', results_dir + '/' + host + '/' + host]
+           '-oA', results_dir + host + '/' + host]
 
     #Debug - Prints out the full nmap command
     #print (" ".join(cmd))
