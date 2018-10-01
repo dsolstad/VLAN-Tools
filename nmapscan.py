@@ -97,7 +97,7 @@ hosts = [s.decode('ascii') for s in hosts]
 if len(hosts) > 0:
     print (colored('[+] Found the following hosts:', 'green'))
     print ("\n".join(hosts))
-    print ('[+] Writing result to ' + results_dir + '/host_discovery.txt')
+    print ('[+] Writing result to ' + results_dir + 'host_discovery.txt')
     with open(results_dir + 'host_discovery.txt' , 'w') as out:
         out.write("\n".join(hosts))
 else:
