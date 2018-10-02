@@ -51,7 +51,7 @@ root@kali:~#
 ## nmapmerge.py - Merge multiple nmap ouputs into one CSV
 $ nmapmerge.py &lt;path/to/folder&gt;
 ```
-root@kali:~/Desktop# python3 nmapmerge.py Results/192.168.253.0[24]
+root@kali:~# python3 nmapmerge.py Results/192.168.253.0[24]
 [+] Merging files in the folder: Results/192.168.253.0[24]
 [+] Opening: Results/192.168.253.0[24]/192.168.253.254.nmap
 [+] Opening: Results/192.168.253.0[24]/192.168.253.2.nmap
@@ -72,5 +72,27 @@ ipaddr,port,protocol,state,service,version,
 192.168.253.2,137,udp,open|filtered,netbios-ns,,
 192.168.253.2,138,udp,open|filtered,netbios-dgm,,
 192.168.253.2,139,udp,open|filtered,netbios-ssn,,
-root@kali:~/Desktop# 
+root@kali:~# 
 ```
+
+## Tips and Tricks
+
+# Setup
+
+In order for vlancon.py to work, you need to have a connection to the trunk port of a switch. I recommend getting a Ethernet to USB dongle to have a seperate interface just for this.
+
+# "Comma VLANS"
+If you encounter a VLAN with the name e.g. 101,2 you need to to strip the comma part and use the subnet for the "parent" VLAN. Then manually add a static route to the target VLAN via a gateway. See the following example below. Assuming 192.168.1.1 is a gateway.
+
+```
+101    192.168.1.0/24
+101,1  192.168.2.0/24
+101,2  192.168.3.0/24
+```
+
+If you want to enter the 101,2 VLAN, then do the following:
+```
+root@kali:~# python3 vlancon.py add 192.168.1.0/24 eth1 101
+root@kali:~# ip route add 192.168.3.0/24 via 192.168.1.1
+```
+
