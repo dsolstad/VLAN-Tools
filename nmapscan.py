@@ -76,9 +76,9 @@ ports = '-pT:' + tcp_ports + ',U:' + udp_ports
 
 ## Creating the output folder
 if target.find('/') != -1:
-    results_dir = 'Results/' + target.replace('/', '[') + ']/'
+    results_dir = './Results/' + target.replace('/', '[') + ']/'
 else:
-    results_dir = 'Results/'
+    results_dir = './Results/'
 
 if not os.path.exists(results_dir):
     os.makedirs(results_dir)
@@ -109,8 +109,13 @@ else:
 print ('----------------------------------------')
 
 for host in hosts:
+
+    # Creating a folder for the current host
+    if not os.path.exists(results_dir + host):
+        os.makedirs(results_dir + host)
+
     print ('[+] Scanning ' + host)
-    print ('[+] Storing result in ' + results_dir + host + '/*.*')
+    print ('[+] Storing result in ' + results_dir + host + '/')
 
     cmd = ['nmap', '-sUTV', host, '-T4', '-O', '-n', '-v', '-Pn', '--reason',
            ports,
@@ -118,14 +123,16 @@ for host in hosts:
            '-e', interface,
            '-oA', results_dir + host + '/' + host]
 
-    #Debug - Prints out the full nmap command
-    #print (" ".join(cmd))
+
+    # Debug - Prints out the full nmap command
+    # print (" ".join(cmd))
 
     p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
     
     host_complete = False
     scantype = ''
+
     while host_complete is False:
         #time.sleep(0.5)
         for line in p.stdout:
