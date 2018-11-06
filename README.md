@@ -18,10 +18,6 @@ root@kali:~# python3 vlancon.py add 192.168.1.0/24 eth1 101
 root@kali:~# ip route add 192.168.3.0/24 via 192.168.1.1
 ```
 
-## vlanloopscan.py - A tool to nmap scan multiple VLANs automatically
-
-$ vlanloopscan.py &lt;path/to/vlanlist.txt&gt; [&lt;path/to/ports.txt&gt;]
-
 ## vlancon.py - A tool to add and remove VLAN interfaces on Linux  
   
 $ vlancon.py add|rem &lt;network&gt; &lt;interface&gt; &lt;vlan&gt; [&lt;preferred ip-addr&gt;]
@@ -38,6 +34,10 @@ root@kali:~# python3 vlancon.py add 192.168.1.0/24 eth0 101
 [+] Success. Gateway responding.  
 root@kali:~#  
 ```
+  
+## vlanloopscan.py - A tool to nmap scan multiple VLANs automatically
+
+$ vlanloopscan.py &lt;path/to/vlanlist.txt&gt; [&lt;path/to/ports.txt&gt;]
   
 ## nmapscan.py - A wrapper around nmap  
 
