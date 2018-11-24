@@ -4,7 +4,7 @@ A collection of scripts that can be useful when doing security assessments of mu
   
 In order for vlancon.py to work, you need to have a connection to a trunk port of a switch. I recommend getting an Ethernet to USB dongle to have a seperate interface just for this.  
   
-If you encounter a VLAN with the name e.g. 101,2 you need to to strip the comma part and use the subnet for the "parent" VLAN. Then manually add a static route to the target VLAN via a gateway. See the following example below. Assuming 192.168.1.1 is a gateway.
+If you encounter a VLAN with the name e.g. 101,2 you need to strip the comma part and use the subnet for the "parent" VLAN. Then manually add a static route to the target VLAN via a gateway. See the following example below. Assuming 192.168.1.1 is a gateway.
 
 ```
 101    192.168.1.0/24
@@ -73,7 +73,7 @@ root@kali:~# python3 nmapmerge.py Results/192.168.253.0[24]
 [+] Merging files in the folder: Results/192.168.253.0[24]
 [+] Opening: Results/192.168.253.0[24]/192.168.253.254.nmap
 [+] Opening: Results/192.168.253.0[24]/192.168.253.2.nmap
-[+] Written merged CSV result to /root/Desktop/services.csv
+[+] Written merged CSV result to /root/services.csv
 root@kali:~# cat services.csv 
 ipaddr,port,protocol,state,service,version,
 192.168.253.254,80,tcp,filtered,http,,
