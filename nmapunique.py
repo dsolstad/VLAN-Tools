@@ -23,4 +23,4 @@ if len(sys.argv) < 2:
  
 path = sys.argv[1]
  
-os.system("grep -Er '^[0-9]{1,6}\/[tcp|udp]' " + path + " | cut -d':' -f2 | cut -d'/' -f1 | sort -n | uniq")
+os.system("grep -Er '^[0-9]{1,6}\/[tcp|udp]' " + path + " | cut -d':' -f2 | cut -d'/' -f1 | sort -n | uniq | tr '\n' ','")
