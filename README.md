@@ -92,3 +92,11 @@ ipaddr,port,protocol,state,service,version,
 192.168.253.2,139,udp,open|filtered,netbios-ssn,,
 root@kali:~# 
 ```
+
+## nmapunique.py - Get unique ports from nmap scans
+$ nmapunique.py &lt;path/to/folder&gt;
+```
+root@kali:~# python3 nmapunique.py Results/
+21,22,23,25,53,80,81,88,89,111,135,139,161,389,427,443,445
+root@kali:~# 
+```
