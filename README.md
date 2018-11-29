@@ -39,7 +39,8 @@ root@kali:~#
 
 $ vlanloopscan.py &lt;path/to/vlanlist.txt&gt; [&lt;path/to/ports.txt&gt;]
   
-## nmapscan.py - A wrapper around nmap  
+## nmapscan.py - nmap scanning simplefied  
+This is just a wrapper around nmap which will run a full host discovery, tcp, udp, os and version scan. It will also create output files for each host in all formats.
 
 $ nmapscan.py &lt;network&gt; &lt;interface&gt; [&lt;path/to/ports.txt&gt;]
 ```
