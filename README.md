@@ -1,6 +1,6 @@
 # VLAN-Tools
 
-A collection of scripts that can be useful when doing network assessments of multiple VLANs.  
+A collection of scripts that can be useful when doing network assessments with nmap and multiple VLANs.  
   
 In order for vlancon.py to work, you need to have a connection to a trunk port of a switch. I recommend getting an Ethernet to USB dongle to have a seperate interface just for this.  
   
