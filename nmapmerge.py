@@ -17,51 +17,45 @@ from termcolor import colored
 help = """
 nmapmerge.py <path/to/folder>
 
-The script expects .nmap files directly inside the input folder.
+The script expects fill recursivly find all .nmap files and print out the merged result in CSV. 
 """
 
 if len(sys.argv) != 2:
     print (help)
     sys.exit(1)
 
-folder = sys.argv[1]
+rootfolder = sys.argv[1]
 results = []
 
-print ('[+] Merging files in the folder: ' + folder)
+for subdir, dirs, files in os.walk(rootfolder):
+    for file in files:
 
-for filename in os.listdir(folder):
+        filename = os.path.join(subdir, file)
+        if not filename.endswith('.nmap'): continue
 
-    # Skip files not ending with .nmap
-    if not filename.endswith('.nmap'):
-        continue
+        for scan in open(filename, 'r').read().split("\n\n"):
 
-    path = os.path.join(folder, filename)
-    print ('[+] Opening: ' + path)
+            info = {}
+            ipaddr = re.findall(r'Nmap scan report for (\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})', scan)
+            ports = re.findall(r'(\d+)\/(tcp|udp)\s+(.*?)\s+(.*?)\s+(.*?)', scan)
 
-    with open(path) as f:
+            for key, val in enumerate(ports):
+                info['ipaddr'] = ipaddr[0]
+                info['port'] = val[0]
+                info['protocol'] = val[1]
+                info['state'] = val[2]
+                info['service'] = val[3]
+                info['version'] = val[4]
+                results.append(dict(info))
 
-        for line in f.readlines():
-            match = re.match('(\d+)\/(tcp|udp)\s+(.*?)\s+(.*?)\s+(.*?)', line)
-            if match:
-                try:
-                    info = {'ipaddr': os.path.splitext(filename)[0],
-                            'port': match.group(1),
-                            'protocol': match.group(2),
-                            'state': match.group(3),
-                            'service': match.group(4),
-                            'version': match.group(5)}
-                    results.append(dict(info))
-                except: pass
+# Print CSV headers
+for item in results[0].keys():
+    print(item + ',', end='')
 
-
-with open('services.csv', 'w') as f:
-    # Print CSV headers
-    for item in results[0].keys():
-        f.write(item + ',')
-    # Print CSV values
-    for x in results:
-        f.write("\n")
-        for key, value in x.items():
-            f.write(value + ',')
-
-print (colored('[+] Written merged CSV result to ' + os.getcwd() + '/services.csv', 'green'))
+# Print CSV values
+for x in results:
+    print("\n", end='')
+    for key, value in x.items():
+        print(value, end='')
+        print(',', end='')
+print("")
