@@ -18,7 +18,7 @@ root@kali:~# python3 vlancon.py add 192.168.1.0/24 eth1 101
 root@kali:~# ip route add 192.168.3.0/24 via 192.168.1.1
 ```
 
-## vlancon.py - A tool to add and remove VLAN interfaces on Linux  
+## vlancon.py - Add and remove VLAN interfaces on Linux  
   
 $ vlancon.py add|rem &lt;network&gt; &lt;interface&gt; &lt;vlan&gt; [&lt;preferred ip-addr&gt;]
 
@@ -35,12 +35,16 @@ root@kali:~# python3 vlancon.py add 192.168.1.0/24 eth0 101
 root@kali:~#  
 ```
   
-## vlanloopscan.py - A tool to nmap scan multiple VLANs automatically
+## vlanloopscan.py - Nmap scan multiple VLANs automatically
 
 $ vlanloopscan.py &lt;path/to/vlanlist.txt&gt; [&lt;path/to/ports.txt&gt;]
   
-## nmapscan.py - nmap scanning simplefied  
-This is just a wrapper around nmap which will run a full host discovery, tcp, udp, os and version scan. It will also create output files for each host in all formats.
+## segtest.py - Optimized Nmap scan for segmentation testing
+
+$ segtest.py &lt;network&gt;
+  
+## nmapscan.py - Nmap scanning simplified  
+This is just a wrapper around Nmap which will run a full host discovery, tcp, udp, os and version scan. It will also create output files for each host in all formats.
 
 $ nmapscan.py &lt;network&gt; &lt;interface&gt; [&lt;path/to/ports.txt&gt;]
 ```
@@ -67,7 +71,7 @@ root@kali:~# python3 nmapscan.py 192.168.1.0/24 eth0.101
 root@kali:~#
 ```
 
-## nmapmerge.py - Merge multiple nmap ouputs into one CSV
+## nmapmerge.py - Merge multiple Nmap ouputs into one CSV
 $ nmapmerge.py &lt;path/to/folder&gt;
 ```
 root@kali:~# python3 nmapmerge.py Results/
@@ -89,7 +93,7 @@ ipaddr,port,protocol,state,service,version,
 root@kali:~# 
 ```
 
-## nmapunique.py - Get unique ports from nmap scans
+## nmapunique.py - Get unique ports from Nmap scans
 $ nmapunique.py &lt;path/to/folder&gt;
 ```
 root@kali:~# python3 nmapunique.py Results/
