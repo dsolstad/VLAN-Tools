@@ -69,12 +69,7 @@ root@kali:~#
 ## nmapmerge.py - Merge multiple nmap ouputs into one CSV
 $ nmapmerge.py &lt;path/to/folder&gt;
 ```
-root@kali:~# python3 nmapmerge.py Results/192.168.253.0[24]
-[+] Merging files in the folder: Results/192.168.253.0[24]
-[+] Opening: Results/192.168.253.0[24]/192.168.253.254.nmap
-[+] Opening: Results/192.168.253.0[24]/192.168.253.2.nmap
-[+] Written merged CSV result to /root/services.csv
-root@kali:~# cat services.csv 
+root@kali:~# python3 nmapmerge.py Results/
 ipaddr,port,protocol,state,service,version,
 192.168.253.254,80,tcp,filtered,http,,
 192.168.253.254,443,tcp,filtered,https,,
