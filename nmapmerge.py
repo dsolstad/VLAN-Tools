@@ -48,14 +48,16 @@ for subdir, dirs, files in os.walk(rootfolder):
                 info['version'] = val[4]
                 results.append(dict(info))
 
-# Print CSV headers
-for item in results[0].keys():
-    print(item + ',', end='')
+try:
+    # Print CSV headers
+    for item in results[0].keys():
+        print(item + ',', end='')
 
-# Print CSV values
-for x in results:
-    print("\n", end='')
-    for key, value in x.items():
-        print(value, end='')
-        print(',', end='')
-print("")
+    # Print CSV values
+    for x in results:
+        print("\n", end='')
+        for key, value in x.items():
+            print(value, end='')
+            print(',', end='')
+    print("")
+except: pass
