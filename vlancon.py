@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 ##
-## A tool to easily add and remove vlans
+## A tool to easily add and remove vlans.
 ## Author: Daniel Solstad (dsolstad.com)
 ##
 
@@ -45,10 +45,6 @@ def vlan_rem(interface, vlan):
     sub.call(['ip', 'link', 'set', 'dev', subinterface, 'down'], stdout=sub.PIPE, stderr=sub.PIPE)
     sub.call(['vconfig', 'rem', subinterface], stdout=sub.PIPE, stderr=sub.PIPE)
 
-def set_ip_addr(interface, vlan, ipaddr):
-    subinterface = interface + "." + vlan
-    sub.call(['ip', 'addr', 'add', ipaddr, 'dev', subinterface], stdout=sub.PIPE, stderr=sub.PIPE)
-
 def gateway_add(network, interface, vlan):
     subinterface = interface + "." + vlan    
     #sub.call(['ip', 'route', 'add', 'default', 'via', gateway, 'dev', subinterface], stdout=sub.PIPE, stderr=sub.PIPE)
@@ -59,35 +55,17 @@ def gateway_rem(network, interface, vlan):
     #sub.call(['ip', 'route', 'del', 'default', 'via', gateway, 'dev', subinterface], stdout=sub.PIPE, stderr=sub.PIPE)
     sub.call(['ip', 'route', 'del', network, 'dev', subinterface], stdout=sub.PIPE, stderr=sub.PIPE)
 
-# Checks for an available IP-address. Trying to get the highest available.
-def get_avail_ip_addr(interface, vlan, network):
-    cmd = ['arp-scan', '--interface=' + interface + '.' + vlan , network, '--arpspa', '0.0.0.0']
-    p = sub.Popen(cmd, stdout=sub.PIPE, stderr=sub.PIPE)
-    res, err = p.communicate()
-    # Filter out all valid IP addresses
-    ips = re.findall(r'(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})', res.decode('ascii'))
-    # Loop through and return the highest available IP address
-    # Debug: print(get_ip_range(network, netmask))
-    cidr = network.split('/')
-    for addr in reversed(get_ip_range(network)):
-        if addr not in ips:
-            return addr + '/' + cidr[1]
-    return False
+def ipaddr_set(interface, vlan, ipaddr):
+    subinterface = interface + "." + vlan
+    sub.call(['ip', 'addr', 'add', ipaddr, 'dev', subinterface], stdout=sub.PIPE, stderr=sub.PIPE)
 
-# Checks if the wanted IP-address is available. 
-# Returns the IP-address with subnet if available.
-def check_ip(interface, vlan, network, ipaddr):
+def find_live_hosts(interface, vlan, network):
     cmd = ['arp-scan', '--interface=' + interface + '.' + vlan , network, '--arpspa', '0.0.0.0']
     p = sub.Popen(cmd, stdout=sub.PIPE, stderr=sub.PIPE)
     res, err = p.communicate()
     # Filter out all valid IP addresses
     ips = re.findall(r'(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})', res.decode('ascii'))
-    # Loop through and return the highest available IP address
-    # Debug: print(get_ip_range(network, netmask))
-    cidr = network.split('/')
-    if ipaddr not in ips:
-        return ipaddr + '/' + cidr[1]
-    return False
+    return ips
 
 # Waiting for the network to be ready. 
 # If the ARP table gets populated before 100 seconds, 
@@ -111,8 +89,8 @@ def check_gateway(gateway):
             res = sub.check_output(['ping', '-c', '1', gateway]).decode('ascii')
             if res.find('1 received') != -1:
                 return True
-        except:
-            time.sleep(1)
+        except: pass
+        time.sleep(1)
     return False
 
 # Gets the last octet of all valid IP addresses in the network range
@@ -166,23 +144,41 @@ if __name__ == "__main__":
         print ('[+] Waiting for ARP table to update.')
         wait_for_arp(interface, vlan, network)
 
-        # If the user wants to set preferred IP-address
-        if len(sys.argv) == 6:
-            print ('[+] Checking if the preferred IP-address is available')
-            pref_ip = sys.argv[5]
-            ipaddr = check_ip(interface, vlan, network, pref_ip)
+        print ('[+] Searching for other hosts in the VLAN.')
+        ips = find_live_hosts(interface, vlan, network)
+        if (len(ips)) > 0:
+            print (colored('[+] Found ' + str(len(ips)) + ' live host in network ' + network, 'green'))
         else:
-            print ('[+] Checking for an available IP-address')
-            ipaddr = get_avail_ip_addr(interface, vlan, network)
+            print (colored('[+] Found 0 live host. Check cabling.', 'red'))
+
+        cidr = network.split('/')
+        ipaddr = False
+
+        # Preferred IP-address argument given.
+        if len(sys.argv) == 6:
+            print ('[+] Checking if the preferred IP-address is available.')
+            pref_ip = sys.argv[5]
+            if pref_ip not in ips:
+                ipaddr = pref_ip + '/' + cidr[1]
+            else:
+                print (colored('[+] Error - The preferred IP-address is not available. Aborting.', 'red'))
+                sys.exit(1)
+        # Letting the script figure out an available one
+        else:
+            print ('[+] Checking for an available IP-address.')
+            for addr in reversed(get_ip_range(network)):
+                if addr not in ips:
+                    ipaddr = addr + '/' + cidr[1]
+                    break
 
         if ipaddr != False:
-            set_ip_addr(interface, vlan, ipaddr)
+            #ipaddr_set(interface, vlan, ipaddr)
             print (colored('[+] Using IP-address: ' + str(ipaddr), 'green'))
         else:
             print (colored('[+] Error - Could not find any available IP addresses. Aborting.', 'red'))
             sys.exit(1)
         
-        print ("[+] Adding gateway ")
+        print ("[+] Adding gateway.")
         gateway_add(network, interface, vlan)
         print (colored('[+] Gateway added.', 'green'))
 
