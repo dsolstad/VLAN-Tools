@@ -172,7 +172,7 @@ if __name__ == "__main__":
                     break
 
         if ipaddr != False:
-            #ipaddr_set(interface, vlan, ipaddr)
+            ipaddr_set(interface, vlan, ipaddr)
             print (colored('[+] Using IP-address: ' + str(ipaddr), 'green'))
         else:
             print (colored('[+] Error - Could not find any available IP addresses. Aborting.', 'red'))
