@@ -149,7 +149,7 @@ if __name__ == "__main__":
         if (len(ips)) > 0:
             print (colored('[+] Found ' + str(len(ips)) + ' live host in network ' + network, 'green'))
         else:
-            print (colored('[+] Found 0 live host. Check cabling.', 'red'))
+            print (colored('[+] Found 0 live host.', 'red'))
 
         cidr = network.split('/')
         ipaddr = False
