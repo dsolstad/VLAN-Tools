@@ -72,7 +72,7 @@ root@kali:~# python3 nmapscan.py 192.168.1.0/24 eth0.101
 root@kali:~#
 ```
 
-The output folder structure will look like this:
+The output folder structure example:
 ```
 Results/192.168.0.0[24]  
        /192.168.1.0[24]/host_discovery.txt  
