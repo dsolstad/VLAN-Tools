@@ -36,14 +36,6 @@ root@kali:~# python3 vlancon.py add 192.168.1.0/24 eth1 101
 root@kali:~# ip route add 192.168.3.0/24 via 192.168.1.1
 ```
   
-## vlanloopscan.py - Nmap scan multiple VLANs automatically
-
-$ vlanloopscan.py &lt;path/to/vlanlist.txt&gt; [&lt;path/to/ports.txt&gt;]
-  
-## segtest.py - Optimized Nmap scan for segmentation testing
-
-$ segtest.py &lt;network&gt;
-  
 ## nmapscan.py - Nmap scanning simplified  
 This is just a wrapper around Nmap which will run a full host discovery, tcp, udp, os and version scan. It will also create output files for each host in all formats.
   
@@ -114,3 +106,12 @@ root@kali:~# python3 nmapunique.py Results/
 21,22,23,25,53,80,81,88,89,111,135,139,161,389,427,443,445
 root@kali:~# 
 ```
+
+## vlanloopscan.py - Nmap scan multiple VLANs automatically
+
+$ vlanloopscan.py &lt;path/to/vlanlist.txt&gt; [&lt;path/to/ports.txt&gt;]
+  
+## segtest.py - Optimized Nmap scan for segmentation testing
+
+$ segtest.py &lt;network&gt;
+  
