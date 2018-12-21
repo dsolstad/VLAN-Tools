@@ -7,15 +7,16 @@ A collection of scripts that can be useful when doing network assessments with n
 $ vlancon.py add|rem &lt;network&gt; &lt;interface&gt; &lt;vlan&gt; [&lt;preferred ip-addr&gt;]
 
 ```
-root@kali:~# python3 vlancon.py add 192.168.1.0/24 eth0 101
-[+] Adding interface eth0.101 (192.168.1.0)  
-[+] Interface added.  
-[+] Checking for an available IP-address   
-[+] Successfully set IP-address: 192.168.1.254  
-[+] Adding gateway 192.168.1.1  
-[+] Gateway added.  
-[+] Checking if gateway is responding  
-[+] Success. Gateway responding.  
+root@kali:~# python3 vlancon.py add 192.168.1.0/24 eth1 101
+[+] Adding interface eth1.101 (192.168.1.0/24)  
+[+] Interface added.
+[+] Waiting for ARP table to update.
+[+] Searching for other hosts in the VLAN.
+[+] Found 24 live host in network 192.168.1.0/24
+[+] Checking for an available IP-address.
+[+] Using IP-address: 192.168.1.254/24
+[+] Adding gateway.
+[+] Gateway added.
 root@kali:~#  
 ```
   
