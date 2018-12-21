@@ -46,7 +46,7 @@ $ segtest.py &lt;network&gt;
   
 ## nmapscan.py - Nmap scanning simplified  
 This is just a wrapper around Nmap which will run a full host discovery, tcp, udp, os and version scan. It will also create output files for each host in all formats.
-
+  
 $ nmapscan.py &lt;network&gt; &lt;interface&gt; [&lt;path/to/ports.txt&gt;]
 ```
 root@kali:~# python3 nmapscan.py 192.168.1.0/24 eth0.101
@@ -60,7 +60,7 @@ root@kali:~# python3 nmapscan.py 192.168.1.0/24 eth0.101
 [+] Writing result to Results/192.168.1.0[24]/host_discovery.txt  
 ----------------------------------------  
 [+] Initiating port scan on 192.168.1.1  
-[+] Storing result in Results/192.168.1.0[24]/192.168.1.1.*  
+[+] Writing result to Results/192.168.1.0[24]/192.168.1.1/  
 [+] Connect scan progress  
 [XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX]  
 [+] Connect scan completed  
@@ -70,6 +70,19 @@ root@kali:~# python3 nmapscan.py 192.168.1.0/24 eth0.101
 [+] Initiating port scan on 192.168.1.2
 ...  
 root@kali:~#
+```
+
+The output folder structure will look like this:
+```
+Results/192.168.0.0[24]  
+       /192.168.1.0[24]/host_discovery.txt  
+                        192.168.1.1/  
+                        192.168.1.2/  
+                        192.168.1.137/  
+                        192.168.1.254/192.168.1.254.nmap  
+                                      192.168.1.254.xml  
+                                      192.168.1.254.gnmap  
+  
 ```
 
 ## nmapmerge.py - Merge multiple Nmap ouputs into one CSV
