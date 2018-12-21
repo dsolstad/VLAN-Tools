@@ -49,7 +49,7 @@ This is just a wrapper around Nmap which will run a full host discovery, tcp, ud
   
 $ nmapscan.py &lt;network&gt; &lt;interface&gt; [&lt;path/to/ports.txt&gt;]
 ```
-root@kali:~# python3 nmapscan.py 192.168.1.0/24 eth0.101
+root@kali:~# python3 nmapscan.py 192.168.1.0/24 eth1.101
 [+] No input file with ports given. Using defaults.
 [+] Initiating host discovery  
 [+] Found the following hosts:  
