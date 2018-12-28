@@ -113,7 +113,7 @@ When doing a blind network scan, where every host is reported to be alive and al
   
 $ python3 segtest.py &lt;network&gt;
   
-Tip: You can use xargs to do multiple Nmap scans in parallel. Just be sure to find the right number for your network, before you start to lose accuracy. The targets.txt can contain any number of subnets (separated by newlines), but only three Nmap processes will run simultaneously at any given time.
+Tip: You can use xargs to do multiple Nmap scans in parallel. Just be sure to find the right number for your network, before you start to lose accuracy. The targets.txt can contain any number of subnets (separated by newlines). The following command will only run three Nmap processes simultaneously at any given time until the all the targets are scanned.
   
 ```
 $ cat targets.txt | xargs -I CMD -P 3 python3 segtest.py
