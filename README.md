@@ -1,6 +1,6 @@
 # VLAN-Tools
 
-A collection of scripts that can be useful when doing network assessments with nmap and multiple VLANs.  
+A collection of scripts that can be useful when doing network assessments with nmap in multiple VLANs.  
   
 ## vlancon.py - Add and remove VLAN interfaces on Linux  
   
