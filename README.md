@@ -23,7 +23,8 @@ root@kali:~#
 In order for vlancon.py to work, you need to have a connection to a trunk port of a switch. I recommend getting an Ethernet to USB dongle to have a seperate interface just for this.  
   
 If you encounter a VLAN with the name e.g. 101,2 you need to strip the comma part and use the subnet for the "parent" VLAN. Then manually add a static route to the target VLAN via a gateway. See the following example below. Assuming 192.168.1.1 is a gateway.
-
+  
+VLAN List:
 ```
 101    192.168.1.0/24
 101,1  192.168.2.0/24
