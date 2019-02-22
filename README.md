@@ -37,6 +37,16 @@ root@kali:~# python3 vlancon.py add 192.168.1.0/24 eth1 101
 root@kali:~# ip route add 192.168.3.0/24 via 192.168.1.1
 ```
   
+If you want to connect to multiple VLANs, then you could make a script like this:
+```
+root@kali:~# cat connect_all.sh
+./vlancon.py add 192.168.1.0/24 eth1 101 &
+./vlancon.py add 192.168.2.0/24 eth1 102 &
+./vlancon.py add 192.168.3.0/24 eth1 103 &
+./vlancon.py add 192.168.4.0/24 eth1 104 &
+root@kali:~# ./connect_all.sh
+```
+  
 ## nmapscan.py - Nmap scanning simplified  
 This is just a wrapper around Nmap which will run a full host discovery, tcp, udp, os and version scan. It will also create output files for each host in all formats.
   
