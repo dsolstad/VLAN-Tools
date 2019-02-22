@@ -37,7 +37,7 @@ root@kali:~# python3 vlancon.py add 192.168.1.0/24 eth1 101
 root@kali:~# ip route add 192.168.3.0/24 via 192.168.1.1
 ```
   
-If you want to connect to multiple VLANs, then you could make a script like this:
+If you want to connect to multiple VLANs simultaneously, then you could make a script like this:
 ```
 root@kali:~# cat connect_all.sh
 ./vlancon.py add 192.168.1.0/24 eth1 101 &
