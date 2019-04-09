@@ -47,7 +47,6 @@ root@kali:~# cat connect_all.sh
 root@kali:~# ./connect_all.sh
 ```
   
-
 ## segtest.py - Optimized Nmap scan for segmentation testing
 
 When doing a blind network scan, where every host is reported to be alive and all ports filtered, a large network scan will take forever to complete. After benchmarking Nmap and comparing results with different settings, including max-rtt-timeout,host-timeout,max-retries and min/max-hostgroup it was the rtt-timeout parameter that did the most decrease in scan time. A value of 150ms resulted in the fastest and most thorough scan for the network I assessed. Any lower value would fail to find all active services. 
