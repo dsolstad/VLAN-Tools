@@ -1,8 +1,6 @@
-# VLAN-Tools
+# vlancon.py - Add and remove VLAN interfaces on Linux 
 
-A collection of scripts that can be useful when doing network assessments in multiple VLANs.  
-  
-## vlancon.py - Add and remove VLAN interfaces on Linux  
+A script to easily setup multiple VLAN interfaces on Linux.  
   
 $ vlancon.py add|rem &lt;network&gt; &lt;interface&gt; &lt;vlan&gt; [&lt;preferred ip-addr&gt;]
 
