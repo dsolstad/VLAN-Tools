@@ -1,6 +1,6 @@
 # vlancon.py
 
-A script to easily setup multiple VLAN interfaces on Linux.  
+A tool to easily setup multiple VLAN interfaces on Linux.  
 
 Syntax:    
 $ vlancon.py add|rem &lt;network&gt; &lt;interface&gt; &lt;vlan&gt; [&lt;preferred ip-addr&gt;]
