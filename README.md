@@ -1,6 +1,6 @@
 # vlancon.py
 
-A tool to easily setup multiple VLAN interfaces on Linux.  
+A tool to easily setup multiple VLAN interfaces on Linux. It will use the highest available IP-address unless you specify a IP-address in the last argument.  
 
 Syntax:    
 $ python3 vlancon.py add|rem &lt;network&gt; &lt;interface&gt; &lt;vlan&gt; [&lt;preferred ip-addr&gt;]
