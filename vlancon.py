@@ -2,6 +2,7 @@
 ##
 ## A tool to easily add and remove vlans.
 ## Author: Daniel Solstad (dsolstad.com)
+## Version: 1.1
 ##
 
 import sys
@@ -45,12 +46,12 @@ def vlan_rem(interface, vlan):
     sub.call(['ip', 'link', 'set', 'dev', subinterface, 'down'], stdout=sub.PIPE, stderr=sub.PIPE)
     sub.call(['vconfig', 'rem', subinterface], stdout=sub.PIPE, stderr=sub.PIPE)
 
-def gateway_add(network, interface, vlan):
+def route_add(network, interface, vlan):
     subinterface = interface + "." + vlan    
     #sub.call(['ip', 'route', 'add', 'default', 'via', gateway, 'dev', subinterface], stdout=sub.PIPE, stderr=sub.PIPE)
     sub.call(['ip', 'route', 'add', network, 'dev', subinterface], stdout=sub.PIPE, stderr=sub.PIPE)
 
-def gateway_rem(network, interface, vlan):
+def route_rem(network, interface, vlan):
     subinterface = interface + "." + vlan    
     #sub.call(['ip', 'route', 'del', 'default', 'via', gateway, 'dev', subinterface], stdout=sub.PIPE, stderr=sub.PIPE)
     sub.call(['ip', 'route', 'del', network, 'dev', subinterface], stdout=sub.PIPE, stderr=sub.PIPE)
@@ -119,11 +120,10 @@ if __name__ == "__main__":
             print (help)
             sys.exit(1)
 
-
         print ('[+] Removing vlan interface: ' + interface + '.' + vlan)
         vlan_rem(interface, vlan)
         print ('[+] Removing gateway')
-        gateway_rem(network, interface, vlan)
+        route_rem(network, interface, vlan)
         print (colored('Done.', 'green'))
 
     elif sys.argv[1] == 'add':
@@ -149,7 +149,7 @@ if __name__ == "__main__":
         if (len(ips)) > 0:
             print (colored('[+] Found ' + str(len(ips)) + ' live host in network ' + network, 'green'))
         else:
-            print (colored('[+] Found 0 live host.', 'red'))
+            print (colored('[+] Found 0 live host. Tip: Verify cabling.', 'red'))
 
         cidr = network.split('/')
         ipaddr = False
@@ -163,7 +163,7 @@ if __name__ == "__main__":
             else:
                 print (colored('[+] Error - The preferred IP-address is not available. Aborting.', 'red'))
                 sys.exit(1)
-        # Letting the script figure out an available one
+        # Letting the script figure out an available IP-address
         else:
             print ('[+] Checking for an available IP-address.')
             for addr in reversed(get_ip_range(network)):
@@ -178,8 +178,8 @@ if __name__ == "__main__":
             print (colored('[+] Error - Could not find any available IP addresses. Aborting.', 'red'))
             sys.exit(1)
         
-        print ("[+] Adding gateway.")
-        gateway_add(network, interface, vlan)
+        print ("[+] Adding route.")
+        route_add(network, interface, vlan)
         print (colored('[+] Gateway added.', 'green'))
 
         #print ("[+] Checking if gateway is responding")
