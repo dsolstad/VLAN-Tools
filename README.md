@@ -26,7 +26,7 @@ In order for vlancon.py to work, you need to have a connection to a trunk port o
 The following scenarios assumes that the gateways have the first available IP-address in each VLAN. For example: 192.168.1.1/24
 
 ### Routing traffic
-If you want to route traffic through a certain VLAN, as for example Internet traffic, add a dafault route via the target VLANs gateway:
+If you want to route traffic through a certain VLAN, as for example Internet traffic, add a default route via the target VLANs gateway:
 ```
 root@kali:~# python3 vlancon.py add 192.168.1.0/24 eth1 101
 root@kali:~# ip route add default via 192.168.1.1
