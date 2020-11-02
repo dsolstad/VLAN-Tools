@@ -68,19 +68,19 @@ def find_live_hosts(interface, vlan, network):
     ips = re.findall(r'(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})', res.decode('ascii'))
     return ips
 
-# Waiting for the network to be ready. 
-# If the ARP table gets populated before 100 seconds, 
-#  we can jump right to the arp scan.
+# To determine an available ipaddr, we need to arp-scan the network to find live hosts.
+# However, this can give unacurrate results if the network is not ready.
+# It is usually ready after 100 seconds, or when the ARP table gets populated.
 def wait_for_arp(interface, vlan, network):
     subinterface = interface + '.' + vlan
-    for i in range(1, 100):
+    for i in range(1, 50):
         try:
             res = sub.check_output(['arp', '-a', '-i', subinterface]).decode('ascii')
             # If there no incomplete entries we return
             if res.find('incomplete') == -1 and res.find('no match') == -1:
                 return True
         except: pass
-        time.sleep(1)
+        time.sleep(2)
     return False
 
 # Checking if the gateway is responsive. Waiting 60 seconds.
@@ -180,7 +180,7 @@ if __name__ == "__main__":
         
         print ("[+] Adding route.")
         route_add(network, interface, vlan)
-        print (colored('[+] Gateway added.', 'green'))
+        print (colored('[+] Route added.', 'green'))
 
         #print ("[+] Checking if gateway is responding")
         #if check_gateway(gateway):
