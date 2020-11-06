@@ -141,7 +141,7 @@ if __name__ == "__main__":
         vlan_add(interface, vlan)
         print (colored('[+] Interface added.', 'green'))
         
-        print ('[+] Waiting for ARP table to update.')
+        print ('[+] Waiting for network to be ready.')
         wait_for_arp(interface, vlan, network)
 
         print ('[+] Searching for other hosts in the VLAN.')
