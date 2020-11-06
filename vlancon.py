@@ -147,7 +147,8 @@ if __name__ == "__main__":
         print ('[+] Searching for other hosts in the VLAN.')
         ips = find_live_hosts(interface, vlan, network)
         if (len(ips)) > 0:
-            print (colored('[+] Found ' + str(len(ips)) + ' live host in network ' + network, 'green'))
+            print (colored('[+] Found the following ' + str(len(ips)) + ' live host in network ' + network, 'green'))
+            print ("\n".join(ips))
         else:
             print (colored('[+] Found 0 live host. Tip: Verify cabling.', 'red'))
 
