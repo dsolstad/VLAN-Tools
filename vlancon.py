@@ -2,7 +2,7 @@
 ##
 ## A tool to easily add and remove vlans.
 ## Author: Daniel Solstad (dsolstad.com)
-## Version: 1.1
+## Version: 1.2
 ##
 
 import sys
@@ -42,7 +42,7 @@ def vlan_add(interface, vlan):
 
 def vlan_rem(interface, vlan):
     subinterface = interface + "." + vlan
-    sub.call(['ip', 'link', 'set', 'dev', interface, 'down'], stdout=sub.PIPE, stderr=sub.PIPE)
+    #sub.call(['ip', 'link', 'set', 'dev', interface, 'down'], stdout=sub.PIPE, stderr=sub.PIPE)
     sub.call(['ip', 'link', 'set', 'dev', subinterface, 'down'], stdout=sub.PIPE, stderr=sub.PIPE)
     sub.call(['vconfig', 'rem', subinterface], stdout=sub.PIPE, stderr=sub.PIPE)
 
@@ -122,7 +122,7 @@ if __name__ == "__main__":
 
         print ('[+] Removing vlan interface: ' + interface + '.' + vlan)
         vlan_rem(interface, vlan)
-        print ('[+] Removing gateway')
+        print ('[+] Removing route.')
         route_rem(network, interface, vlan)
         print (colored('Done.', 'green'))
 
